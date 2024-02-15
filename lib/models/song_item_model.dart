@@ -4,6 +4,7 @@ enum Janre {
   TROT,
   POP,
   CLASSIC,
+  ALL,
 }
 
 class SongItemModel {

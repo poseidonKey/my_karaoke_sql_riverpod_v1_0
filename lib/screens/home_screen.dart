@@ -4,14 +4,20 @@ import 'package:my_karaoke_sql_riverpod_v1_0/components/song_item_component.dart
 import 'package:my_karaoke_sql_riverpod_v1_0/const/const.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/databases/db_helper.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/models/song_item_model.dart';
+import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/filtered_song_list_provider.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/song_item_notifier_provider.dart';
+import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/songs_count_provider.dart';
+import 'package:my_karaoke_sql_riverpod_v1_0/screens/test_data_manage.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(songItemListNotifierProvider);
+    // final state = ref.watch(songItemListNotifierProviderDB);
+    final state = ref.watch(songItemListNotifierProviderDB);
+    final count = ref.watch(songCountProvider);
+    final janreState = ref.watch(filterProvider);
     return Scaffold(
       appBar: AppBar(
         title: const Text('My Like Songs'),
@@ -52,15 +58,55 @@ class HomeScreen extends ConsumerWidget {
           // IconButton(onPressed: deleteTestData, icon: const Icon(Icons.delete)),
         ],
       ),
-      drawer: _drawer(context),
+      drawer: _drawer(context, ref),
       body: Column(
         children: [
-          const Text(
-            '총 곡수 : oo 개',
-            style: TextStyle(
-                color: Colors.lightBlue,
-                fontWeight: FontWeight.bold,
-                fontSize: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Text(
+                '총 곡수 : $count 곡',
+                style: const TextStyle(
+                    color: Colors.lightBlue,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20),
+              ),
+              const SizedBox(
+                width: 20,
+              ),
+              Row(
+                children: [
+                  const Text(
+                    '곡 추가>>',
+                    style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.red,
+                        fontWeight: FontWeight.w100),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => Container(),
+                        ),
+                      );
+                    },
+                    icon: const Icon(Icons.add_to_queue),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            child: SizedBox(
+              width: double.infinity,
+              height: 3,
+              child: Container(
+                decoration: const BoxDecoration(color: Colors.red),
+              ),
+            ),
           ),
           const SizedBox(
             width: 20,
@@ -79,7 +125,10 @@ class HomeScreen extends ConsumerWidget {
                       ),
                     ),
                     itemBuilder: (context, index) {
-                      return SongItemComponent(item: data[index]);
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        child: SongItemComponent(item: data[index]),
+                      );
                     },
                   ),
                 );
@@ -90,10 +139,21 @@ class HomeScreen extends ConsumerWidget {
               loading: () => const CircularProgressIndicator())
         ],
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => const TestDataManage(),
+            ),
+          );
+        },
+        child: const Icon(Icons.edit),
+      ),
     );
   }
 
-  Widget _drawer(BuildContext context) {
+  Widget _drawer(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(songItemListNotifierProviderDB);
     return Drawer(
       width: MediaQuery.of(context).size.width * .5,
       child: ListView(
@@ -114,6 +174,7 @@ class HomeScreen extends ConsumerWidget {
               style: optionStyle1,
             ),
             onTap: () async {
+              ref.read(filterProvider.notifier).state = Janre.BALLADE;
               print(Janre.BALLADE);
               DbHelper helper = DbHelper();
               await helper.openDb();
@@ -144,10 +205,25 @@ class HomeScreen extends ConsumerWidget {
             ),
             onTap: () async {
               Navigator.pop(context);
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => Container()),
-              );
+              final state = ref
+                  .read(songItemListNotifierProvider.notifier)
+                  .filterSongItem(
+                    janre: '트로트',
+                  );
+              print(state);
+
+              // print(state);
+              // final tmp = state.value!
+              //     .where((element) => element.songJanre == '트로트')
+              //     .toList();
+              // for (var aa in state) {
+              //   print(aa.songJanre);
+              // }
+
+              // Navigator.pushReplacement(
+              //   context,
+              //   MaterialPageRoute(builder: (context) => Container()),
+              // );
             },
           ),
           ListTile(
@@ -206,80 +282,5 @@ class HomeScreen extends ConsumerWidget {
         ],
       ),
     );
-  }
-
-  Future<void> getShowData(WidgetRef ref) async {
-    DbHelper helper = DbHelper();
-    List<SongItemModel> songList;
-
-    await helper.openDb();
-    songList = await helper.getLists();
-    if (songList.isEmpty) {
-      songList = [];
-    } else {
-      songList = songList;
-    }
-  }
-
-  void makeTestData() async {
-    int cnt = 1;
-
-    try {
-      DbHelper helper = DbHelper();
-      await helper.openDb();
-      String songJanre = "";
-
-      for (int i = 0; i < 30; i++) {
-        if (i % 3 == 0) songJanre = "가요";
-        if (i % 3 == 1) songJanre = "팝";
-        if (i % 3 == 2) songJanre = "트로트";
-        final song = SongItemModel(
-            null,
-            "song Name ${cnt++}",
-            "songGYNumber",
-            "songTJNumber",
-            songJanre,
-            "songUtubeAddress",
-            "songETC",
-            "2022.1.1",
-            "false");
-
-        await helper.insertList(song);
-        // print('success');
-      }
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  void deleteTestDatabase() async {
-    try {
-      DbHelper helper = DbHelper();
-      await helper.openDb();
-      await helper.db!.rawQuery("drop database if exists mysongs");
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  void deleteTestTable() async {
-    try {
-      DbHelper helper = DbHelper();
-      await helper.openDb();
-      await helper.db!.rawQuery("drop table if exists mysongs");
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  void deleteTestData() async {
-    try {
-      DbHelper helper = DbHelper();
-      await helper.openDb();
-      var result = await helper.deleteAllList();
-      if (result == 'success') print("Success");
-    } catch (e) {
-      print(e);
-    }
   }
 }
