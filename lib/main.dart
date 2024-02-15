@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:my_karaoke_sql_riverpod_v1_0/screens/home_screen.dart';
 
 void main() => runApp(const MyApp());
 
@@ -7,15 +9,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Material App',
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Material App Bar'),
-        ),
-        body: const Center(
-          child: Text('Hello World'),
-        ),
+    return const ProviderScope(
+      child: MaterialApp(
+        title: 'Material App',
+        home: HomeScreen(),
       ),
     );
   }
