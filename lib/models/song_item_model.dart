@@ -55,7 +55,7 @@ class SongItemModel {
     String? songFavorite,
   }) {
     return SongItemModel(
-      id,
+      id ?? this.id,
       songName ?? this.songName,
       songGYNumber ?? this.songGYNumber,
       songTJNumber ?? this.songTJNumber,

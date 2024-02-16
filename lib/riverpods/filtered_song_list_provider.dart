@@ -3,37 +3,31 @@ import 'package:my_karaoke_sql_riverpod_v1_0/models/song_item_model.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/song_item_notifier_provider.dart';
 
 final filteredSongListProvider = Provider<List<SongItemModel>>((ref) {
-  final songListState = ref.watch(songItemListNotifierProviderDB).value;
+  final songListState = ref.watch(songItemListNotifierProviderDB).value!;
+  // final songListState = ref.watch(songItemListNotifierProvider);
+  // var songListState1 = ref.read(songItemListNotifierProvider);
+  // songListState1 = songListState;
+  // final manageSong=ref.watch(songListState);
   final filterState = ref.watch(filterProvider);
-  if (filterState == Janre.ALL) return songListState!;
+  if (filterState == Janre.ALL) return songListState;
   if (filterState == Janre.TROT) {
-    return songListState!
+    return songListState
         .where((element) => element.songJanre == '트로트')
         .toList();
-    // final songs =
-    //     songListState!.where((element) => element.songJanre == '트로트').toList();
-    // ref.read(songCountProvider.notifier).update(
-    //       (state) => songs.length,
-    //     );
-    // return songListState;
   }
   if (filterState == Janre.BALLADE) {
-    return songListState!
-        .where((element) => element.songJanre == '가요')
-        .toList();
+    return songListState.where((element) => element.songJanre == '가요').toList();
   }
   if (filterState == Janre.CLASSIC) {
-    return songListState!
+    return songListState
         .where((element) => element.songJanre == '클래식')
         .toList();
   }
   if (filterState == Janre.DANCE) {
-    return songListState!
-        .where((element) => element.songJanre == '댄스')
-        .toList();
+    return songListState.where((element) => element.songJanre == '댄스').toList();
   }
 
   return [];
 });
 
-final filterProvider = StateProvider((ref) => Janre.ALL);
+final filterProvider = StateProvider<Janre>((ref) => Janre.ALL);

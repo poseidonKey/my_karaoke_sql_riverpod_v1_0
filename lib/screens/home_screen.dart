@@ -19,7 +19,7 @@ class HomeScreen extends ConsumerWidget {
         title: const Text('My Like Songs'),
         actions: [
           const Text(
-            '즐찾',
+            '즐김 곡',
             style: TextStyle(
                 fontSize: 15, color: Colors.red, fontWeight: FontWeight.bold),
           ),

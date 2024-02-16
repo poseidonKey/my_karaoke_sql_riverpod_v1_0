@@ -15,7 +15,9 @@ final songItemListNotifierProviderDB =
   } else {
     songList = songList;
   }
-
+  // List<SongItemModel> songData = ref.read(songItemListNotifierProvider);
+  // songData.clear();
+  // songData.addAll(songList);
   ref.read(songCountProvider.notifier).update(
         (state) => songList.length,
       );
@@ -42,13 +44,5 @@ class SongItemNotifier extends StateNotifier<List<SongItemModel>> {
           : element;
     }).toList();
     return state;
-    // return state.where((element) {
-    //   (element.id == id)
-    //       ? element.copyWith(
-    //           songFavorite: (element.songFavorite == 'true')
-    //               ? element.songFavorite = 'false'
-    //               : element.songFavorite = 'true')
-    //       : element;
-    // }).toList();
   }
 }
