@@ -14,10 +14,8 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // final state = ref.watch(songItemListNotifierProviderDB);
-    final state = ref.watch(songItemListNotifierProviderDB);
+    final state = ref.watch(filteredSongListProvider);
     final count = ref.watch(songCountProvider);
-    final janreState = ref.watch(filterProvider);
     return Scaffold(
       appBar: AppBar(
         title: const Text('My Like Songs'),
@@ -45,7 +43,7 @@ class HomeScreen extends ConsumerWidget {
           ),
           IconButton(
             onPressed: () async {
-              var result = await Navigator.of(context).push(
+              await Navigator.of(context).push(
                 MaterialPageRoute(builder: (context) {
                   return Container();
                 }),
@@ -111,32 +109,24 @@ class HomeScreen extends ConsumerWidget {
           const SizedBox(
             width: 20,
           ),
-          state.when(
-              data: (data) {
-                return Expanded(
-                  child: ListView.separated(
-                    itemCount: data.length,
-                    separatorBuilder: (BuildContext context, int index) =>
-                        SizedBox(
-                      height: 5,
-                      child: Container(
-                        color: Colors.grey.shade300,
-                        width: 100,
-                      ),
-                    ),
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8),
-                        child: SongItemComponent(item: data[index]),
-                      );
-                    },
-                  ),
+          Expanded(
+            child: ListView.separated(
+              itemCount: state.length,
+              separatorBuilder: (BuildContext context, int index) => SizedBox(
+                height: 5,
+                child: Container(
+                  color: Colors.grey.shade300,
+                  width: 100,
+                ),
+              ),
+              itemBuilder: (context, index) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  child: SongItemComponent(item: state[index]),
                 );
               },
-              error: (error, stack) {
-                return Text(error.toString());
-              },
-              loading: () => const CircularProgressIndicator())
+            ),
+          )
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -153,7 +143,6 @@ class HomeScreen extends ConsumerWidget {
   }
 
   Widget _drawer(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(songItemListNotifierProviderDB);
     return Drawer(
       width: MediaQuery.of(context).size.width * .5,
       child: ListView(
@@ -170,32 +159,32 @@ class HomeScreen extends ConsumerWidget {
           ),
           ListTile(
             title: const Text(
-              '발라드',
+              '가요',
               style: optionStyle1,
             ),
             onTap: () async {
-              ref.read(filterProvider.notifier).state = Janre.BALLADE;
-              print(Janre.BALLADE);
-              DbHelper helper = DbHelper();
-              await helper.openDb();
-              var result = await helper.searchList("발라드", "songJanre");
-              for (var element in result) {
-                print(element);
-              }
+              Navigator.pop(context);
+              ref
+                  .read(filterProvider.notifier)
+                  .update((state) => Janre.BALLADE);
+              final songs = ref.read(filteredSongListProvider);
+              ref.read(songCountProvider.notifier).update(
+                    (state) => songs.length,
+                  );
             },
           ),
           ListTile(
             title: const Text(
-              '댄스',
+              '전곡',
               style: optionStyle1,
             ),
             onTap: () async {
-              DbHelper helper = DbHelper();
-              await helper.openDb();
-              var result = await helper.searchList("댄스", "songJanre");
-              for (var element in result) {
-                print(element);
-              }
+              Navigator.pop(context);
+              ref.read(filterProvider.notifier).update((state) => Janre.ALL);
+              final songs = ref.read(filteredSongListProvider);
+              ref.read(songCountProvider.notifier).update(
+                    (state) => songs.length,
+                  );
             },
           ),
           ListTile(
@@ -205,25 +194,13 @@ class HomeScreen extends ConsumerWidget {
             ),
             onTap: () async {
               Navigator.pop(context);
-              final state = ref
-                  .read(songItemListNotifierProvider.notifier)
-                  .filterSongItem(
-                    janre: '트로트',
+              ref.read(filterProvider.notifier).update((state) => Janre.TROT);
+              final songs = ref.read(filteredSongListProvider);
+              // print(songs.length);
+
+              ref.read(songCountProvider.notifier).update(
+                    (state) => songs.length,
                   );
-              print(state);
-
-              // print(state);
-              // final tmp = state.value!
-              //     .where((element) => element.songJanre == '트로트')
-              //     .toList();
-              // for (var aa in state) {
-              //   print(aa.songJanre);
-              // }
-
-              // Navigator.pushReplacement(
-              //   context,
-              //   MaterialPageRoute(builder: (context) => Container()),
-              // );
             },
           ),
           ListTile(
@@ -233,10 +210,14 @@ class HomeScreen extends ConsumerWidget {
             ),
             onTap: () async {
               Navigator.pop(context);
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => Container()),
-              );
+              Navigator.pop(context);
+              ref.read(filterProvider.notifier).update((state) => Janre.POP);
+              final songs = ref.read(filteredSongListProvider);
+              // print(songs.length);
+
+              ref.read(songCountProvider.notifier).update(
+                    (state) => songs.length,
+                  );
             },
           ),
           ListTile(
@@ -245,12 +226,15 @@ class HomeScreen extends ConsumerWidget {
               style: optionStyle1,
             ),
             onTap: () async {
-              DbHelper helper = DbHelper();
-              await helper.openDb();
-              var result = await helper.searchList("클래식", "songJanre");
-              for (var element in result) {
-                print(element);
-              }
+              Navigator.pop(context);
+              ref
+                  .read(filterProvider.notifier)
+                  .update((state) => Janre.CLASSIC);
+              final songs = ref.read(filteredSongListProvider);
+
+              ref.read(songCountProvider.notifier).update(
+                    (state) => songs.length,
+                  );
             },
           ),
           const SizedBox(

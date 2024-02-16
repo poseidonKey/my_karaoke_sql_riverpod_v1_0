@@ -19,10 +19,6 @@ final songItemListNotifierProviderDB =
   ref.read(songCountProvider.notifier).update(
         (state) => songList.length,
       );
-  // List<SongItemModel> tt = ref.read(songItemListNotifierProvider);
-  // tt = songList;
-
-  // ref.read(songItemListNotifierProvider.notifier) = songList;
   return songList;
 });
 
