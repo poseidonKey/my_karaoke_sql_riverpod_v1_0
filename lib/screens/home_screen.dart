@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/components/song_item_component.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/const/const.dart';
-import 'package:my_karaoke_sql_riverpod_v1_0/databases/db_helper.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/models/song_item_model.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/filtered_song_list_provider.dart';
-import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/song_item_notifier_provider.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/songs_count_provider.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/screens/test_data_manage.dart';
 
@@ -159,14 +157,12 @@ class HomeScreen extends ConsumerWidget {
           ),
           ListTile(
             title: const Text(
-              '가요',
+              '모든 곡',
               style: optionStyle1,
             ),
             onTap: () async {
               Navigator.pop(context);
-              ref
-                  .read(filterProvider.notifier)
-                  .update((state) => Janre.BALLADE);
+              ref.read(filterProvider.notifier).update((state) => Janre.ALL);
               final songs = ref.read(filteredSongListProvider);
               ref.read(songCountProvider.notifier).update(
                     (state) => songs.length,
@@ -175,12 +171,14 @@ class HomeScreen extends ConsumerWidget {
           ),
           ListTile(
             title: const Text(
-              '전곡',
+              '가요',
               style: optionStyle1,
             ),
             onTap: () async {
               Navigator.pop(context);
-              ref.read(filterProvider.notifier).update((state) => Janre.ALL);
+              ref
+                  .read(filterProvider.notifier)
+                  .update((state) => Janre.BALLADE);
               final songs = ref.read(filteredSongListProvider);
               ref.read(songCountProvider.notifier).update(
                     (state) => songs.length,

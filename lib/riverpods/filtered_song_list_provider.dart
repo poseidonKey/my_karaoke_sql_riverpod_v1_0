@@ -1,7 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/models/song_item_model.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/song_item_notifier_provider.dart';
-import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/songs_count_provider.dart';
 
 final filteredSongListProvider = Provider<List<SongItemModel>>((ref) {
   final songListState = ref.watch(songItemListNotifierProviderDB).value;

@@ -29,9 +29,26 @@ final songItemListNotifierProvider =
 
 class SongItemNotifier extends StateNotifier<List<SongItemModel>> {
   SongItemNotifier() : super([]);
-  List<SongItemModel> filterSongItem({
-    required String janre,
+
+  List<SongItemModel> favChangeSongItem({
+    required String id,
   }) {
-    return state.where((element) => element.songJanre == janre).toList();
+    state.map((element) {
+      (element.id == id)
+          ? element.copyWith(
+              songFavorite: (element.songFavorite == 'true')
+                  ? element.songFavorite = 'false'
+                  : element.songFavorite = 'true')
+          : element;
+    }).toList();
+    return state;
+    // return state.where((element) {
+    //   (element.id == id)
+    //       ? element.copyWith(
+    //           songFavorite: (element.songFavorite == 'true')
+    //               ? element.songFavorite = 'false'
+    //               : element.songFavorite = 'true')
+    //       : element;
+    // }).toList();
   }
 }

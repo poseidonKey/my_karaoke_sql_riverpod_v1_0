@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/models/song_item_model.dart';
+import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/song_item_notifier_provider.dart';
 
-class SongItemComponent extends StatelessWidget {
+class SongItemComponent extends ConsumerWidget {
   final SongItemModel item;
   const SongItemComponent({super.key, required this.item});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(songItemListNotifierProvider);
     return Dismissible(
       key: ObjectKey(item.id),
       onDismissed: (direction) {
@@ -15,6 +18,13 @@ class SongItemComponent extends StatelessWidget {
         }
       },
       child: ListTile(
+        leading: CircleAvatar(
+          radius: 15,
+          foregroundColor: Colors.deepPurpleAccent,
+          child: Text(
+            item.id.toString(),
+          ),
+        ),
         title: GestureDetector(
           child: Column(
             children: [
@@ -23,13 +33,6 @@ class SongItemComponent extends StatelessWidget {
             ],
           ),
           onTap: () {},
-        ),
-        leading: CircleAvatar(
-          radius: 15,
-          foregroundColor: Colors.deepPurpleAccent,
-          child: Text(
-            item.id.toString(),
-          ),
         ),
         trailing: IconButton(
           icon: (item.songFavorite == 'true')
@@ -41,6 +44,18 @@ class SongItemComponent extends StatelessWidget {
                   Icons.favorite_border_outlined,
                 ),
           onPressed: () async {
+            ref
+                .read(songItemListNotifierProvider.notifier)
+                .favChangeSongItem(id: item.id!);
+            print(item.songFavorite);
+            // final t = state.firstWhere((element) => (element.id == item.id));
+            // widget.item.songFavorite = (widget.item.songFavorite == 'true')
+            //     ? widget.item.songFavorite = 'false'
+            //     : widget.item.songFavorite = 'true';
+            // setState(() {
+            //   fav == 'true' ? fav = 'false' : fav = 'true';
+            // });
+
             // mySongCnprovider.favChange(index);
             // DbHelper helper = DbHelper();
             // await helper.openDb();
