@@ -13,6 +13,7 @@ class HomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(filteredSongListProvider);
+    // ref.read(songCountProvider.notifier).update((state1) => state.length);
     final count = ref.watch(songCountProvider);
     return Scaffold(
       appBar: AppBar(
