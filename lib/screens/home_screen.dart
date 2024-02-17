@@ -6,8 +6,6 @@ import 'package:my_karaoke_sql_riverpod_v1_0/const/const.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/models/song_item_model.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/filtered_song_list_provider.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/songs_count_provider.dart';
-import 'package:my_karaoke_sql_riverpod_v1_0/screens/favority_song_screen.dart';
-import 'package:my_karaoke_sql_riverpod_v1_0/screens/test_data_manage.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -23,7 +21,7 @@ class HomeScreen extends ConsumerWidget {
         title: const Text('My Like Songs'),
         actions: [
           const Text(
-            '즐찾',
+            '즐•찾',
             style: TextStyle(
                 fontSize: 15, color: Colors.red, fontWeight: FontWeight.bold),
           ),
@@ -40,11 +38,7 @@ class HomeScreen extends ConsumerWidget {
           ),
           IconButton(
             onPressed: () async {
-              await Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) {
-                  return Container();
-                }),
-              );
+              context.go('/searchSong');
             },
             icon: const Icon(Icons.search),
           )
@@ -54,77 +48,76 @@ class HomeScreen extends ConsumerWidget {
         ],
       ),
       drawer: _drawer(context, ref),
-      body: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Text(
-                // '총 곡수 : $count 곡, $janre',
-                '총 곡수 : $count 곡,',
-                style: const TextStyle(
-                    color: Colors.lightBlue,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20),
-              ),
-              const SizedBox(
-                width: 20,
-              ),
-              Row(
-                children: [
-                  const Text(
-                    '곡 DB : ',
-                    style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.red,
-                        fontWeight: FontWeight.w600),
-                  ),
-                  IconButton(
-                    onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => const TestDataManage(),
-                        ),
-                      );
-                    },
-                    icon: const Icon(Icons.add_to_queue),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8),
-            child: SizedBox(
-              width: double.infinity,
-              height: 3,
-              child: Container(
-                decoration: const BoxDecoration(color: Colors.red),
-              ),
+      body: Padding(
+        padding: const EdgeInsets.only(left: 8, right: 8, bottom: 50),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Text(
+                  // '총 곡수 : $count 곡, $janre',
+                  '총 곡수 : $count 곡,',
+                  style: const TextStyle(
+                      color: Colors.lightBlue,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20),
+                ),
+                const SizedBox(
+                  width: 20,
+                ),
+                Row(
+                  children: [
+                    const Text(
+                      '곡 DB : ',
+                      style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.red,
+                          fontWeight: FontWeight.w600),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        context.go('/testDataManage');
+                      },
+                      icon: const Icon(Icons.add_to_queue),
+                    ),
+                  ],
+                ),
+              ],
             ),
-          ),
-          const SizedBox(
-            width: 20,
-          ),
-          Expanded(
-            child: ListView.separated(
-              itemCount: state.length,
-              separatorBuilder: (BuildContext context, int index) => SizedBox(
-                height: 5,
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: SizedBox(
+                width: double.infinity,
+                height: 3,
                 child: Container(
-                  color: Colors.grey.shade300,
-                  width: 100,
+                  decoration: const BoxDecoration(color: Colors.red),
                 ),
               ),
-              itemBuilder: (context, index) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  child: SongItemComponent(item: state[index]),
-                );
-              },
             ),
-          )
-        ],
+            const SizedBox(
+              width: 20,
+            ),
+            Expanded(
+              child: ListView.separated(
+                itemCount: state.length,
+                separatorBuilder: (BuildContext context, int index) => SizedBox(
+                  height: 5,
+                  child: Container(
+                    color: Colors.grey.shade300,
+                    width: 100,
+                  ),
+                ),
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    child: SongItemComponent(item: state[index]),
+                  );
+                },
+              ),
+            )
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
