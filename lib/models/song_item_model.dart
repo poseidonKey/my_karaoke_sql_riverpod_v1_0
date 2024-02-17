@@ -42,4 +42,28 @@ class SongItemModel {
       "songFavorite": songFavorite,
     };
   }
+
+  SongItemModel copyWith({
+    String? id,
+    String? songName,
+    String? songGYNumber,
+    String? songTJNumber,
+    String? songJanre,
+    String? songUtubeAddress,
+    String? songETC,
+    String? songCreateTime,
+    String? songFavorite,
+  }) {
+    return SongItemModel(
+      id,
+      songName ?? this.songName,
+      songGYNumber ?? this.songGYNumber,
+      songTJNumber ?? this.songTJNumber,
+      songJanre ?? this.songJanre,
+      songUtubeAddress ?? this.songUtubeAddress,
+      songETC ?? this.songETC,
+      songCreateTime ?? this.songCreateTime,
+      songFavorite ?? this.songFavorite,
+    );
+  }
 }
