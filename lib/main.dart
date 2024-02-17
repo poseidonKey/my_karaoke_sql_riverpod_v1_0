@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:my_karaoke_sql_riverpod_v1_0/screens/home_screen.dart';
+import 'package:my_karaoke_sql_riverpod_v1_0/route/router.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,10 +13,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const ProviderScope(
-      child: MaterialApp(
+    return ProviderScope(
+      child: MaterialApp.router(
+        routerConfig: router,
         title: 'Material App',
-        home: HomeScreen(),
       ),
     );
   }

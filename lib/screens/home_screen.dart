@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/components/song_item_component.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/const/const.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/models/song_item_model.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/filtered_song_list_provider.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/songs_count_provider.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/screens/favority_song_screen.dart';
-import 'package:my_karaoke_sql_riverpod_v1_0/screens/song_add_screen.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/screens/test_data_manage.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -29,12 +29,7 @@ class HomeScreen extends ConsumerWidget {
           ),
           IconButton(
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const FavoritySongScreen(),
-                ),
-              );
+              context.go('/favoritySong');
             },
             icon: const Icon(Icons.favorite),
           ),
@@ -133,11 +128,7 @@ class HomeScreen extends ConsumerWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => const SongAddScreen(),
-            ),
-          );
+          context.go('/songAdd');
         },
         child: const Icon(Icons.add),
       ),
