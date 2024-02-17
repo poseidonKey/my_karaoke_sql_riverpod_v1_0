@@ -3,15 +3,38 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/components/song_item_component.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/const/const.dart';
+import 'package:my_karaoke_sql_riverpod_v1_0/databases/db_helper.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/models/song_item_model.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/filtered_song_list_provider.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/songs_count_provider.dart';
 
-class HomeScreen extends ConsumerWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends ConsumerState<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    getDBCount();
+  }
+
+  Future<void> getDBCount() async {
+    DbHelper helper = DbHelper();
+    List<SongItemModel> songList;
+
+    await helper.openDb();
+    songList = await helper.getLists();
+    ref.read(songCountProvider.notifier).update((state) => songList.length);
+  }
+
+  @override
+  Widget build(
+    BuildContext context,
+  ) {
     final state = ref.watch(filteredSongListProvider);
     // ref.read(songCountProvider.notifier).update((state1) => state.length);
     final count = ref.watch(songCountProvider);
