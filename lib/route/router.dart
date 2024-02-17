@@ -11,9 +11,7 @@ final router = GoRouter(
     GoRoute(
       path: '/home',
       builder: (context, state) {
-        return HomeScreen(
-          count: 10,
-        );
+        return const HomeScreen();
       },
       routes: [
         GoRoute(

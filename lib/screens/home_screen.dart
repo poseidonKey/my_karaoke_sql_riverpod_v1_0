@@ -8,14 +8,13 @@ import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/filtered_song_list_provid
 import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/songs_count_provider.dart';
 
 class HomeScreen extends ConsumerWidget {
-  int count;
-  HomeScreen({required this.count, super.key});
+  const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(filteredSongListProvider);
     // ref.read(songCountProvider.notifier).update((state1) => state.length);
-    count = ref.watch(songCountProvider);
+    final count = ref.watch(songCountProvider);
     // cnt = count;
     // final janre = ref.watch(filterProvider);
     return Scaffold(
