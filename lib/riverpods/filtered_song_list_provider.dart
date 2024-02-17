@@ -9,9 +9,6 @@ final filteredSongListProvider = Provider<List<SongItemModel>>((ref) {
   final songListState = ref.watch(songItemListNotifierProvider);
   final filterState = ref.watch(filterProvider);
   if (filterState == Janre.ALL) {
-    // ref
-    //     .read(songCountProvider.notifier)
-    //     .update((state) => songListState.length);
     return songListState;
   }
   if (filterState == Janre.TROT) {
@@ -19,6 +16,7 @@ final filteredSongListProvider = Provider<List<SongItemModel>>((ref) {
         .where((element) => element.songJanre == '트로트')
         .toList();
   }
+
   if (filterState == Janre.BALLADE) {
     return songListState.where((element) => element.songJanre == '가요').toList();
   }

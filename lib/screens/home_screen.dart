@@ -5,6 +5,8 @@ import 'package:my_karaoke_sql_riverpod_v1_0/const/const.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/models/song_item_model.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/filtered_song_list_provider.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/songs_count_provider.dart';
+import 'package:my_karaoke_sql_riverpod_v1_0/screens/favority_song_screen.dart';
+import 'package:my_karaoke_sql_riverpod_v1_0/screens/song_add_screen.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/screens/test_data_manage.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -15,6 +17,7 @@ class HomeScreen extends ConsumerWidget {
     final state = ref.watch(filteredSongListProvider);
     // ref.read(songCountProvider.notifier).update((state1) => state.length);
     final count = ref.watch(songCountProvider);
+    final janre = ref.watch(filterProvider);
     return Scaffold(
       appBar: AppBar(
         title: const Text('My Like Songs'),
@@ -26,10 +29,10 @@ class HomeScreen extends ConsumerWidget {
           ),
           IconButton(
             onPressed: () {
-              Navigator.pushReplacement(
+              Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => Container(),
+                  builder: (context) => const FavoritySongScreen(),
                 ),
               );
             },
@@ -62,7 +65,7 @@ class HomeScreen extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Text(
-                '총 곡수 : $count 곡',
+                '총 곡수 : $count 곡, $janre',
                 style: const TextStyle(
                     color: Colors.lightBlue,
                     fontWeight: FontWeight.bold,
@@ -74,18 +77,17 @@ class HomeScreen extends ConsumerWidget {
               Row(
                 children: [
                   const Text(
-                    '곡 추가>>',
+                    '곡 DB : ',
                     style: TextStyle(
                         fontSize: 20,
                         color: Colors.red,
-                        fontWeight: FontWeight.w100),
+                        fontWeight: FontWeight.w600),
                   ),
                   IconButton(
                     onPressed: () {
-                      Navigator.pushReplacement(
-                        context,
+                      Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => Container(),
+                          builder: (context) => const TestDataManage(),
                         ),
                       );
                     },
@@ -132,11 +134,11 @@ class HomeScreen extends ConsumerWidget {
         onPressed: () {
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => const TestDataManage(),
+              builder: (context) => const SongAddScreen(),
             ),
           );
         },
-        child: const Icon(Icons.edit),
+        child: const Icon(Icons.add),
       ),
     );
   }

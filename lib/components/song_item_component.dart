@@ -3,18 +3,37 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/models/song_item_model.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/song_item_notifier_provider.dart';
 
-class SongItemComponent extends ConsumerWidget {
+class SongItemComponent extends ConsumerStatefulWidget {
   final SongItemModel item;
   const SongItemComponent({super.key, required this.item});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<SongItemComponent> createState() => _SongItemComponent1State();
+}
+
+class _SongItemComponent1State extends ConsumerState<SongItemComponent> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  Widget build(
+    BuildContext context,
+  ) {
     final state = ref.watch(songItemListNotifierProvider);
+    final tg = state.firstWhere((element) => element.id == widget.item.id);
     return Dismissible(
-      key: ObjectKey(item.id),
+      key: ObjectKey(widget.item.id),
       onDismissed: (direction) {
         if (direction == DismissDirection.startToEnd) {
           // Erase
+          state.remove(tg);
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('${tg.songName} Erase'),
+            ),
+          );
         }
       },
       child: ListTile(
@@ -22,20 +41,22 @@ class SongItemComponent extends ConsumerWidget {
           radius: 15,
           foregroundColor: Colors.deepPurpleAccent,
           child: Text(
-            item.id.toString(),
+            widget.item.id.toString(),
           ),
         ),
         title: GestureDetector(
           child: Column(
             children: [
-              Text('${item.songName} : [${item.songJanre}]'),
+              Text('${widget.item.songName} : [${widget.item.songJanre}]'),
               const Text('금영 - 12345, 태진 - 5678'),
             ],
           ),
-          onTap: () {},
+          onTap: () {
+            print(widget.item.id);
+          },
         ),
         trailing: IconButton(
-          icon: (item.songFavorite == 'true')
+          icon: (tg.songFavorite == 'true')
               ? const Icon(
                   Icons.favorite_border,
                   color: Colors.red,
@@ -46,27 +67,8 @@ class SongItemComponent extends ConsumerWidget {
           onPressed: () async {
             ref
                 .read(songItemListNotifierProvider.notifier)
-                .favChangeSongItem(id: item.id!);
-            print(item.songFavorite);
-            // final t = state.firstWhere((element) => (element.id == item.id));
-            // widget.item.songFavorite = (widget.item.songFavorite == 'true')
-            //     ? widget.item.songFavorite = 'false'
-            //     : widget.item.songFavorite = 'true';
-            // setState(() {
-            //   fav == 'true' ? fav = 'false' : fav = 'true';
-            // });
-
-            // mySongCnprovider.favChange(index);
-            // DbHelper helper = DbHelper();
-            // await helper.openDb();
-            // await helper.changeFavority(
-            //     mySongCnprovider.myItems[index],
-            //     mySongCnprovider.myItems[index].songFavorite);
-            // var app =
-            //     Provider.of<MySongChangeNotifierProviderModel>(
-            //         context,
-            //         listen: false);
-            // app.getAllSongs();
+                .favChangeSongItem(id: widget.item.id!);
+            setState(() {});
           },
         ),
       ),
