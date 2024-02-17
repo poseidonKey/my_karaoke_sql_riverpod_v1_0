@@ -17,7 +17,7 @@ class HomeScreen extends ConsumerWidget {
     final state = ref.watch(filteredSongListProvider);
     // ref.read(songCountProvider.notifier).update((state1) => state.length);
     final count = ref.watch(songCountProvider);
-    final janre = ref.watch(filterProvider);
+    // final janre = ref.watch(filterProvider);
     return Scaffold(
       appBar: AppBar(
         title: const Text('My Like Songs'),
@@ -65,7 +65,8 @@ class HomeScreen extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Text(
-                '총 곡수 : $count 곡, $janre',
+                // '총 곡수 : $count 곡, $janre',
+                '총 곡수 : $count 곡,',
                 style: const TextStyle(
                     color: Colors.lightBlue,
                     fontWeight: FontWeight.bold,
