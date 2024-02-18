@@ -27,7 +27,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     List<SongItemModel> songList;
 
     await helper.openDb();
-    songList = await helper.getLists();
+    songList = await helper.getDataCountLists(
+      count: 20,
+    );
     ref.read(songCountProvider.notifier).update((state) => songList.length);
   }
 
@@ -45,24 +47,24 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         title: const Text('My Like Songs'),
         actions: [
           const Text(
-            '즐•찾',
+            '즐•찾:',
             style: TextStyle(
                 fontSize: 15, color: Colors.red, fontWeight: FontWeight.bold),
           ),
           IconButton(
             onPressed: () {
-              context.go('/favoritySong');
+              context.go('/home/favoritySong');
             },
             icon: const Icon(Icons.favorite),
           ),
           const Text(
-            '곡찾기',
+            '곡찾기:',
             style: TextStyle(
                 fontSize: 15, color: Colors.red, fontWeight: FontWeight.bold),
           ),
           IconButton(
             onPressed: () async {
-              context.go('/searchSong');
+              context.go('/home/searchSong');
             },
             icon: const Icon(Icons.search),
           )
@@ -101,7 +103,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     ),
                     IconButton(
                       onPressed: () {
-                        context.go('/testDataManage');
+                        context.go('/home/testDataManage');
                       },
                       icon: const Icon(Icons.add_to_queue),
                     ),
@@ -145,7 +147,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          context.go('/songAdd');
+          context.go('/home/songAdd');
         },
         child: const Icon(Icons.add),
       ),

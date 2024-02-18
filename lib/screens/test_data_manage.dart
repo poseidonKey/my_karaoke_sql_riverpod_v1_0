@@ -8,33 +8,40 @@ class TestDataManage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: SizedBox(
-          width: double.infinity,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ElevatedButton(
-                  onPressed: () => makeTestData(count: 5),
-                  child: const Text('5개 만들기')),
-              const SizedBox(
-                height: 20,
-              ),
-              ElevatedButton(
-                  onPressed: () => makeTestData(count: 100),
-                  child: const Text('100개 만들기')),
-              const SizedBox(
-                height: 20,
-              ),
-              ElevatedButton(
-                  onPressed: deleteTestData, child: const Text('모든 데이터 지우기')),
-              const SizedBox(
-                height: 20,
-              ),
-              ElevatedButton(
-                  onPressed: deleteTestDatabase, child: const Text('테이블 지우기')),
-            ],
-          ),
+      appBar: AppBar(
+        title: const Text('Database Management'),
+      ),
+      body: SizedBox(
+        width: double.infinity,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(
+                onPressed: () => makeTestData(count: 5),
+                child: const Text('5개 만들기')),
+            const SizedBox(
+              height: 20,
+            ),
+            ElevatedButton(
+                onPressed: () => makeTestData(count: 100),
+                child: const Text('100개 만들기')),
+            const SizedBox(
+              height: 20,
+            ),
+            ElevatedButton(
+                onPressed: () => makeTestData(count: 1000),
+                child: const Text('1000개 만들기')),
+            const SizedBox(
+              height: 20,
+            ),
+            ElevatedButton(
+                onPressed: deleteTestData, child: const Text('모든 데이터 지우기')),
+            const SizedBox(
+              height: 20,
+            ),
+            ElevatedButton(
+                onPressed: deleteTestDatabase, child: const Text('테이블 지우기')),
+          ],
         ),
       ),
     );

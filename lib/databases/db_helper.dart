@@ -20,8 +20,37 @@ class DbHelper {
     return db!;
   }
 
-  Future<List<SongItemModel>> getLists() async {
-    final List<Map<String, dynamic>> maps = await db!.query('mysongs');
+  Future<List<SongItemModel>> getDataAllLists() async {
+    final List<Map<String, dynamic>> maps = await db!.query(
+      'mysongs',
+      orderBy: 'id DESC',
+    );
+    if (maps.isEmpty) {
+      return [];
+    }
+
+    return List.generate(maps.length, (i) {
+      return SongItemModel(
+          maps[i]["id"].toString(),
+          maps[i]["songName"],
+          maps[i]["songGYNumber"],
+          maps[i]["songTJNumber"],
+          maps[i]["songJanre"],
+          maps[i]["songUtubeAddress"],
+          maps[i]["songETC"],
+          maps[i]["songCreateTime"],
+          maps[i]["songFavorite"]);
+    });
+  }
+
+  Future<List<SongItemModel>> getDataCountLists({
+    required int count,
+  }) async {
+    final List<Map<String, dynamic>> maps = await db!.query(
+      'mysongs',
+      limit: count,
+      orderBy: 'id DESC',
+    );
     if (maps.isEmpty) {
       return [];
     }

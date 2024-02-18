@@ -20,7 +20,7 @@ class SongItemNotifier extends StateNotifier<List<SongItemModel>> {
     List<SongItemModel> songList;
 
     await helper.openDb();
-    songList = await helper.getLists();
+    songList = await helper.getDataCountLists(count: 20);
     if (songList.isEmpty) {
       songList = [];
     } else {
@@ -51,7 +51,7 @@ final songItemListNotifierProviderDB =
   List<SongItemModel> songList;
 
   await helper.openDb();
-  songList = await helper.getLists();
+  songList = await helper.getDataAllLists();
   if (songList.isEmpty) {
     songList = [];
   } else {

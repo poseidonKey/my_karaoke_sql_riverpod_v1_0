@@ -24,7 +24,7 @@ final router = GoRouter(
         ),
         GoRoute(
           path: 'searchSong',
-          builder: (context, state) => const SongSearchScreen(),
+          builder: (context, state) => SongSearchScreen(),
         ),
         GoRoute(
           path: 'testDataManage',
