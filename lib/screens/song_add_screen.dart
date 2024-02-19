@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/databases/db_helper.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/layout/defaut_layout.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/models/song_item_model.dart';
@@ -192,6 +191,8 @@ class _SongAddScreenState extends State<SongAddScreen> {
     try {
       DbHelper helper = DbHelper();
       await helper.openDb();
+      _songUtubeAddress =
+          'https://www.google.com/search?q=%EB%88%88%EC%9D%B4%EB%82%B4%EB%A6%AC%EB%84%A4+mr&rlz=1C5CHFA_enKR1089KR1089&oq=%EB%88%88%EC%9D%B4%EB%82%B4%EB%A6%AC%EB%84%A4+mr&gs_lcrp=EgZjaHJvbWUyBggAEEUYOTIHCAEQIRigATIHCAIQIRigAdIBCTEyNTgyajBqN6gCALACAA&sourceid=chrome&ie=UTF-8#vhid=_MoZ4NyKkE2o7M&vssid=global';
       final newSong = SongItemModel(
           null,
           _songName!,

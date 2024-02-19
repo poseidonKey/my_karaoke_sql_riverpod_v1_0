@@ -8,6 +8,7 @@ import 'package:my_karaoke_sql_riverpod_v1_0/models/song_item_model.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/filtered_song_list_provider.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/song_item_notifier_provider.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/songs_count_provider.dart';
+import 'package:my_karaoke_sql_riverpod_v1_0/screens/root_screen.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/screens/song_add_screen.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
@@ -272,6 +273,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   );
             },
           ),
+          SizedBox(
+            height: 30,
+            child: Container(
+              color: Colors.deepPurple,
+            ),
+          ),
           const SizedBox(
             height: 20,
           ),
@@ -294,6 +301,31 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => Container(),
+                ),
+              );
+            },
+          ),
+          const SizedBox(
+            height: 30,
+          ),
+          GestureDetector(
+            child: Container(
+              child: const Padding(
+                padding: EdgeInsets.only(left: 10),
+                child: Text(
+                  "무작위 곡번호 뽑기",
+                  style: TextStyle(
+                      color: Colors.blue,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20),
+                ),
+              ),
+            ),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const RootScreen(),
                 ),
               );
             },

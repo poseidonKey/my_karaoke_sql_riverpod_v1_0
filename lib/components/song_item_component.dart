@@ -66,7 +66,8 @@ class _SongItemComponent1State extends ConsumerState<SongItemComponent> {
           child: Column(
             children: [
               Text('${widget.item.songName} : [${widget.item.songJanre}]'),
-              const Text('금영 - 12345, 태진 - 5678'),
+              Text(
+                  '금영 - ${widget.item.songGYNumber}, 태진 - ${widget.item.songTJNumber}'),
             ],
           ),
           onTap: () {
