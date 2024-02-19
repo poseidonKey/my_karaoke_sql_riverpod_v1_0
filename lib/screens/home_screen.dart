@@ -6,7 +6,9 @@ import 'package:my_karaoke_sql_riverpod_v1_0/const/const.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/databases/db_helper.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/models/song_item_model.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/filtered_song_list_provider.dart';
+import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/song_item_notifier_provider.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/songs_count_provider.dart';
+import 'package:my_karaoke_sql_riverpod_v1_0/screens/song_add_screen.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -25,11 +27,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Future<void> getDBCount() async {
     DbHelper helper = DbHelper();
     List<SongItemModel> songList;
+    List<SongItemModel> songsAllList;
 
     await helper.openDb();
-    songList = await helper.getDataCountLists(
-      count: 20,
-    );
+    songsAllList = await helper.getDataAllLists();
+    ref
+        .read(songsAllCountProvider.notifier)
+        .update((state) => songsAllList.length);
+    songList = await helper.getDataAllLists();
+    // songList = await helper.getDataCountLists(
+    //   count: 20,
+    // );
     ref.read(songCountProvider.notifier).update((state) => songList.length);
   }
 
@@ -40,8 +48,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final state = ref.watch(filteredSongListProvider);
     // ref.read(songCountProvider.notifier).update((state1) => state.length);
     final count = ref.watch(songCountProvider);
+    // final totalCount = ref.watch(songsAllCountProvider);
     // cnt = count;
     // final janre = ref.watch(filterProvider);
+    if (state.isEmpty) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
     return Scaffold(
       appBar: AppBar(
         title: const Text('My Like Songs'),
@@ -146,8 +160,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          context.go('/home/songAdd');
+        onPressed: () async {
+          final String? result = await Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => const SongAddScreen()));
+          if (result == 'success') {
+            await ref
+                .read(songItemListNotifierProvider.notifier)
+                .refreshSongsList();
+            ref
+                .read(songCountProvider.notifier)
+                .update((State) => state.length + 1);
+          }
         },
         child: const Icon(Icons.add),
       ),

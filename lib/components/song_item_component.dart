@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:my_karaoke_sql_riverpod_v1_0/databases/db_helper.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/models/song_item_model.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/song_item_notifier_provider.dart';
+import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/songs_count_provider.dart';
+import 'package:my_karaoke_sql_riverpod_v1_0/screens/song_edit_screen.dart';
+import 'package:my_karaoke_sql_riverpod_v1_0/screens/song_view_screen.dart';
 
 class SongItemComponent extends ConsumerStatefulWidget {
   final SongItemModel item;
@@ -25,15 +29,29 @@ class _SongItemComponent1State extends ConsumerState<SongItemComponent> {
     final tg = state.firstWhere((element) => element.id == widget.item.id);
     return Dismissible(
       key: ObjectKey(widget.item.id),
-      onDismissed: (direction) {
+      onDismissed: (direction) async {
         if (direction == DismissDirection.startToEnd) {
-          // Erase
           state.remove(tg);
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('${tg.songName} Erase'),
-            ),
-          );
+          try {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('${tg.songName} Erase'),
+              ),
+            );
+            DbHelper helper = DbHelper();
+            await helper.openDb();
+            await helper.deleteList(widget.item);
+            setState(() async {
+              await ref
+                  .read(songItemListNotifierProvider.notifier)
+                  .refreshSongsList();
+              ref
+                  .read(songCountProvider.notifier)
+                  .update((State) => state.length);
+            });
+          } catch (e) {
+            print(e);
+          }
         }
       },
       child: ListTile(
@@ -52,7 +70,20 @@ class _SongItemComponent1State extends ConsumerState<SongItemComponent> {
             ],
           ),
           onTap: () {
+            // context.go('/home/songView');
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => const SongViewscreen()),
+            );
             print(widget.item.id);
+          },
+          onDoubleTap: () {
+            // context.go('/home/songEdit');
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                  builder: (context) => SongEditScreen(
+                        songItem: widget.item,
+                      )),
+            );
           },
         ),
         trailing: IconButton(

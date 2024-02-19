@@ -18,13 +18,23 @@ final router = GoRouter(
           path: 'songAdd',
           builder: (context, state) => const SongAddScreen(),
         ),
+        // GoRoute(
+        //   path: 'songEdit',
+        //   // builder: (context, state) => const SongEditScreen(),
+        //   builder: (context, state) => Container(),
+        // ),
+        // GoRoute(
+        //   path: 'songView',
+        //   // builder: (context, state) => const SongViewScreen(),
+        //   builder: (context, state) => Container(),
+        // ),
         GoRoute(
           path: 'favoritySong',
           builder: (context, state) => const FavoritySongScreen(),
         ),
         GoRoute(
           path: 'searchSong',
-          builder: (context, state) => SongSearchScreen(),
+          builder: (context, state) => const SongSearchScreen(),
         ),
         GoRoute(
           path: 'testDataManage',

@@ -20,7 +20,8 @@ class SongItemNotifier extends StateNotifier<List<SongItemModel>> {
     List<SongItemModel> songList;
 
     await helper.openDb();
-    songList = await helper.getDataCountLists(count: 20);
+    // songList = await helper.getDataCountLists(count: 20);
+    songList = await helper.getDataAllLists();
     if (songList.isEmpty) {
       songList = [];
     } else {
@@ -28,6 +29,21 @@ class SongItemNotifier extends StateNotifier<List<SongItemModel>> {
     }
 
     return songList;
+  }
+
+  Future<void> refreshSongsList() async {
+    DbHelper helper = DbHelper();
+    List<SongItemModel> songList;
+
+    await helper.openDb();
+    songList = await helper.getDataAllLists();
+    if (songList.isEmpty) {
+      songList = [];
+    } else {
+      songList = songList;
+    }
+
+    state = songList;
   }
 
   List<SongItemModel> favChangeSongItem({

@@ -23,6 +23,12 @@ class TestDataManage extends StatelessWidget {
               height: 20,
             ),
             ElevatedButton(
+                onPressed: () => makeTestData(count: 30),
+                child: const Text('30개 만들기')),
+            const SizedBox(
+              height: 20,
+            ),
+            ElevatedButton(
                 onPressed: () => makeTestData(count: 100),
                 child: const Text('100개 만들기')),
             const SizedBox(
