@@ -73,7 +73,10 @@ class _SongItemComponent1State extends ConsumerState<SongItemComponent> {
           onTap: () {
             // context.go('/home/songView');
             Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => const SongViewscreen()),
+              MaterialPageRoute(
+                  builder: (context) => SongViewscreen(
+                        item: widget.item,
+                      )),
             );
             print(widget.item.id);
           },

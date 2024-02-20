@@ -15,3 +15,5 @@ const ERROR_COLOR = Colors.red;
 const backgroundColor = Color(0xff0e0e0e);
 const primaryColor = Colors.white;
 final secondaryColor = Colors.grey.shade600;
+const Color RED_COLOR = Color(0xFFEA4955);
+const Color BLUE_COLOR = Color(0xFF549FBF);
