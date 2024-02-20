@@ -1,5 +1,6 @@
 import 'package:go_router/go_router.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/screens/auth_screen.dart';
+import 'package:my_karaoke_sql_riverpod_v1_0/screens/error_screen.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/screens/favority_song_screen.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/screens/home_screen.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/screens/song_add_screen.dart';
@@ -8,6 +9,10 @@ import 'package:my_karaoke_sql_riverpod_v1_0/screens/test_data_manage.dart';
 
 final router = GoRouter(
   routes: [
+    GoRoute(
+      path: '/',
+      builder: (context, state) => const AuthScreen(),
+    ),
     GoRoute(
       path: '/home',
       builder: (context, state) {
@@ -18,16 +23,6 @@ final router = GoRouter(
           path: 'songAdd',
           builder: (context, state) => const SongAddScreen(),
         ),
-        // GoRoute(
-        //   path: 'songEdit',
-        //   // builder: (context, state) => const SongEditScreen(),
-        //   builder: (context, state) => Container(),
-        // ),
-        // GoRoute(
-        //   path: 'songView',
-        //   // builder: (context, state) => const SongViewScreen(),
-        //   builder: (context, state) => Container(),
-        // ),
         GoRoute(
           path: 'favoritySong',
           builder: (context, state) => const FavoritySongScreen(),
@@ -42,9 +37,9 @@ final router = GoRouter(
         ),
       ],
     ),
-    GoRoute(
-      path: '/',
-      builder: (context, state) => const AuthScreen(),
-    )
   ],
+  errorBuilder: (context, state) => ErrorScreen(
+    error: state.error.toString(),
+  ),
+  debugLogDiagnostics: true,
 );
