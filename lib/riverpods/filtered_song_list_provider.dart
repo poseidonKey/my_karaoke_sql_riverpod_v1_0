@@ -27,7 +27,7 @@ final filteredSongListProvider = Provider<List<SongItemModel>>((ref) {
   }
   if (filterState == Janre.DANCE) {
     return songListState.where((element) => element.songJanre == '댄스').toList();
+  } else {
+    return [];
   }
-
-  return [];
 });

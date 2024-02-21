@@ -6,7 +6,6 @@ import 'package:my_karaoke_sql_riverpod_v1_0/const/const.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/databases/db_helper.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/models/song_item_model.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/filtered_song_list_provider.dart';
-import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/song_item_notifier_provider.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/songs_count_provider.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/screens/random_home_screen.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/screens/song_add_screen.dart';
@@ -162,16 +161,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          final String? result = await Navigator.of(context).push(
+          await Navigator.of(context).push(
               MaterialPageRoute(builder: (context) => const SongAddScreen()));
-          if (result == 'success') {
-            await ref
-                .read(songItemListNotifierProvider.notifier)
-                .refreshSongsList();
-            ref
-                .read(songCountProvider.notifier)
-                .update((State) => state.length + 1);
-          }
+          // print(result);
+          // if (result == 'success') {
+          //   // await ref
+          //   //     .read(songItemListNotifierProvider.notifier)
+          //   //     .refreshSongsList();
+          //   // print(state.length);
+          //   // ref
+          //   //     .read(songCountProvider.notifier)
+          //   //     .update((State) => state.length + 1);
+          // }
         },
         child: const Icon(Icons.add),
       ),

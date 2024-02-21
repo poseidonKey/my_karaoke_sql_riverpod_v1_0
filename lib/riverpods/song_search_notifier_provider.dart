@@ -9,17 +9,17 @@ final songSearchNotifierProvider =
 
 class SongSearchNotifier extends StateNotifier<List<SongItemModel>> {
   SongSearchNotifier() : super([]) {
-    final tmp = getSearchData(searchTerm: '1');
+    final tmp = getSearchData(searchValue: '1');
     tmp.then((value) => state = value);
   }
 
   Future<List<SongItemModel>> getSearchData(
-      {required String searchTerm, String target = 'songName'}) async {
+      {required String searchValue, String target = 'songName'}) async {
     DbHelper helper = DbHelper();
     List<SongItemModel> songList;
 
     await helper.openDb();
-    songList = await helper.searchList(searchTerm, target);
+    songList = await helper.searchList(searchValue, target);
     if (songList.isEmpty) {
       songList = [];
     } else {

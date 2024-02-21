@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/databases/db_helper.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/layout/defaut_layout.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/models/song_item_model.dart';
+import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/song_item_notifier_provider.dart';
+import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/songs_count_provider.dart';
 
-class SongAddScreen extends StatefulWidget {
+class SongAddScreen extends ConsumerStatefulWidget {
   const SongAddScreen({super.key});
 
   @override
-  State<SongAddScreen> createState() => _SongAddScreenState();
+  ConsumerState<SongAddScreen> createState() => _SongAddScreenState();
 }
 
-class _SongAddScreenState extends State<SongAddScreen> {
+class _SongAddScreenState extends ConsumerState<SongAddScreen> {
   final _formKey = GlobalKey<FormState>();
   AutovalidateMode autovalidateMode = AutovalidateMode.disabled;
   String? _songName, _songGYNumber, _songTJNumber, _songUtubeAddress, _songETC;
@@ -204,7 +207,14 @@ class _SongAddScreenState extends State<SongAddScreen> {
           "${DateTime.now().year}.${DateTime.now().month}.${DateTime.now().day}",
           _songFavorite);
       await helper.insertList(newSong);
-      Navigator.pop(context, 'success');
+      // print(ref.read(songItemListNotifierProvider.notifier).state.length);
+      // print('========');
+      await ref.read(songItemListNotifierProvider.notifier).refreshSongsList();
+      final cnt = ref.read(songItemListNotifierProvider.notifier).state.length;
+      // print(cnt);
+      ref.read(songCountProvider.notifier).update((State) => cnt);
+      // Navigator.pop(context, 'success');
+      Navigator.pop(context);
     } catch (e) {
       print(e);
     }

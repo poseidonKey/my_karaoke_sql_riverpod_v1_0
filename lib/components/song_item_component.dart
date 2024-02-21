@@ -41,14 +41,13 @@ class _SongItemComponent1State extends ConsumerState<SongItemComponent> {
             DbHelper helper = DbHelper();
             await helper.openDb();
             await helper.deleteList(widget.item);
-            setState(() async {
-              await ref
-                  .read(songItemListNotifierProvider.notifier)
-                  .refreshSongsList();
-              ref
-                  .read(songCountProvider.notifier)
-                  .update((State) => state.length);
-            });
+            await ref
+                .read(songItemListNotifierProvider.notifier)
+                .refreshSongsList();
+            ref
+                .read(songCountProvider.notifier)
+                .update((State) => state.length);
+            // setState(() async {});
           } catch (e) {
             print(e);
           }

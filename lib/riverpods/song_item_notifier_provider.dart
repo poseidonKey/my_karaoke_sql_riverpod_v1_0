@@ -17,7 +17,7 @@ class SongItemNotifier extends StateNotifier<List<SongItemModel>> {
 
   Future<List<SongItemModel>> getDBData() async {
     DbHelper helper = DbHelper();
-    List<SongItemModel> songList;
+    List<SongItemModel> songList = [];
 
     await helper.openDb();
     // songList = await helper.getDataCountLists(count: 20);
@@ -37,6 +37,7 @@ class SongItemNotifier extends StateNotifier<List<SongItemModel>> {
 
     await helper.openDb();
     songList = await helper.getDataAllLists();
+    // print('db : ${songList.length}');
     if (songList.isEmpty) {
       songList = [];
     } else {
@@ -44,6 +45,7 @@ class SongItemNotifier extends StateNotifier<List<SongItemModel>> {
     }
 
     state = songList;
+    // print('state: ${state.length}');
   }
 
   List<SongItemModel> favChangeSongItem({
