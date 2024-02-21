@@ -207,12 +207,10 @@ class _SongAddScreenState extends ConsumerState<SongAddScreen> {
           "${DateTime.now().year}.${DateTime.now().month}.${DateTime.now().day}",
           _songFavorite);
       await helper.insertList(newSong);
-      // print(ref.read(songItemListNotifierProvider.notifier).state.length);
-      // print('========');
       await ref.read(songItemListNotifierProvider.notifier).refreshSongsList();
-      final cnt = ref.read(songItemListNotifierProvider.notifier).state.length;
-      // print(cnt);
-      ref.read(songCountProvider.notifier).update((State) => cnt);
+      final List<SongItemModel> songCnt =
+          ref.read(songItemListNotifierProvider);
+      ref.read(songCountProvider.notifier).update((State) => songCnt.length);
       // Navigator.pop(context, 'success');
       Navigator.pop(context);
     } catch (e) {

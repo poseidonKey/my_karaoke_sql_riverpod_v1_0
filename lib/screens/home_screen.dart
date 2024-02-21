@@ -18,10 +18,19 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
+  final ScrollController controller = ScrollController();
   @override
   void initState() {
     super.initState();
+    controller.addListener(scrollListener);
     getDBCount();
+  }
+
+  void scrollListener() {
+    if (controller.offset > controller.position.maxScrollExtent - 300) {
+      // 다음 데이터 있을 경우 추가 로딩하여 기존 데이터에 추가한다.
+      print('loading');
+    }
   }
 
   Future<void> getDBCount() async {
@@ -140,6 +149,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ),
             Expanded(
               child: ListView.separated(
+                controller: controller,
                 itemCount: state.length,
                 separatorBuilder: (BuildContext context, int index) => SizedBox(
                   height: 5,
