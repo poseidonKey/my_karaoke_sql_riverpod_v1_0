@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:my_karaoke_sql_riverpod_v1_0/components/custom_youtube_player.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/layout/defaut_layout.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/models/song_item_model.dart';
+import 'package:my_karaoke_sql_riverpod_v1_0/screens/youtube_view_screen.dart';
 
 class SongViewscreen extends StatelessWidget {
   final SongItemModel item;
@@ -29,7 +29,11 @@ class SongViewscreen extends StatelessWidget {
                   onPressed: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(builder: (context) {
-                        return const CustomYoutubePlayer();
+                        return const YoutubeViewScreen(
+                          songUrl:
+                              'https://www.youtube.com/watch?v=S6y2S3tfMRQ',
+                        );
+                        // return const CustomYoutubePlayer();
                       }),
                     );
                   },
