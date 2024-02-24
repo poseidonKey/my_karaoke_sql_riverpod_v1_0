@@ -18,7 +18,9 @@ final filteredSongListProvider = Provider<List<SongItemModel>>((ref) {
   }
 
   if (filterState == Janre.BALLADE) {
-    return songListState.where((element) => element.songJanre == '가요').toList();
+    return songListState
+        .where((element) => element.songJanre == '발라드')
+        .toList();
   }
   if (filterState == Janre.CLASSIC) {
     return songListState
@@ -27,6 +29,9 @@ final filteredSongListProvider = Provider<List<SongItemModel>>((ref) {
   }
   if (filterState == Janre.DANCE) {
     return songListState.where((element) => element.songJanre == '댄스').toList();
+  }
+  if (filterState == Janre.POP) {
+    return songListState.where((element) => element.songJanre == '팝').toList();
   } else {
     return [];
   }

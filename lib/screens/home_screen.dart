@@ -220,7 +220,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           ),
           ListTile(
             title: const Text(
-              '가요',
+              '발라드',
               style: optionStyle1,
             ),
             onTap: () async {
@@ -256,7 +256,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               style: optionStyle1,
             ),
             onTap: () async {
-              Navigator.pop(context);
               Navigator.pop(context);
               ref.read(filterProvider.notifier).update((state) => Janre.POP);
               final songs = ref.read(filteredSongListProvider);

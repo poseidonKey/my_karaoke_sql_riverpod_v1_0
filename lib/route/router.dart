@@ -11,6 +11,7 @@ final router = GoRouter(
   routes: [
     GoRoute(
       path: '/',
+      // builder: (context, state) => const TestDataManage(),
       builder: (context, state) => const AuthScreen(),
     ),
     GoRoute(
