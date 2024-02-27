@@ -15,16 +15,30 @@ class SongViewscreen extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
         child: Column(
           children: [
-            _getContentsValue(subject: '제목 : ', content: item.songName),
+            _getContentsValue(
+                subject: '제목 : ', content: item.songName, isNumber: false),
             _getContentsValue(
                 subject: '장르 : ',
-                content: item.songJanre == 'true' ? 'Check' : '추가하지 않음'),
-            _getContentsValue(subject: '즐겨찾기 : ', content: item.songFavorite),
-            _getContentsValue(subject: '금영노래방 : ', content: item.songGYNumber),
-            _getContentsValue(subject: '태진노래방 : ', content: item.songTJNumber),
+                content: item.songJanre == 'true' ? 'Check' : '추가하지 않음',
+                isNumber: false),
             _getContentsValue(
-                subject: '기록 날짜 : ', content: item.songCreateTime),
-            _getContentsValue(subject: '특기사항 : ', content: item.songETC),
+                subject: '즐겨찾기 : ',
+                content: item.songFavorite,
+                isNumber: false),
+            _getContentsValue(
+                subject: '금영노래방 : ',
+                content: item.songGYNumber,
+                isNumber: true),
+            _getContentsValue(
+                subject: '태진노래방 : ',
+                content: item.songTJNumber,
+                isNumber: true),
+            _getContentsValue(
+                subject: '기록 날짜 : ',
+                content: item.songCreateTime,
+                isNumber: false),
+            _getContentsValue(
+                subject: '특기사항 : ', content: item.songETC, isNumber: false),
             SizedBox(
                 child: Container(
               height: 5,
@@ -76,7 +90,11 @@ class SongViewscreen extends StatelessWidget {
     );
   }
 
-  Widget _getContentsValue({required String subject, required String content}) {
+  Widget _getContentsValue({
+    required String subject,
+    required String content,
+    required bool isNumber,
+  }) {
     const subjectStyle = TextStyle(fontSize: 20, fontWeight: FontWeight.w500);
     const contentStyle =
         TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: Colors.red);
@@ -92,7 +110,11 @@ class SongViewscreen extends StatelessWidget {
             width: 20,
           ),
           Text(
-            content.length <= 10 ? content : '${content.substring(0, 10)}…',
+            isNumber == true
+                ? content.length <= 10
+                    ? content
+                    : '${content.substring(0, 10)}…'
+                : content,
             style: contentStyle,
           ),
         ],
