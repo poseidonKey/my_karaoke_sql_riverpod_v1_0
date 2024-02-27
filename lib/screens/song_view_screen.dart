@@ -91,7 +91,10 @@ class SongViewscreen extends StatelessWidget {
           const SizedBox(
             width: 20,
           ),
-          Text(content, style: contentStyle),
+          Text(
+            content.length <= 10 ? content : '${content.substring(0, 10)}…',
+            style: contentStyle,
+          ),
         ],
       ),
     );

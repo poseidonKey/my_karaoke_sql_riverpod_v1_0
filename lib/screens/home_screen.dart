@@ -95,6 +95,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           //     onPressed: makeTestData, icon: const Icon(Icons.credit_card)),
           // IconButton(onPressed: deleteTestData, icon: const Icon(Icons.delete)),
         ],
+        bottom: const PreferredSize(
+          preferredSize: Size.fromHeight(0.5),
+          child: Divider(thickness: 0.5, height: 0.5, color: Colors.red),
+        ),
       ),
       drawer: _drawer(context, ref),
       body: Padding(
