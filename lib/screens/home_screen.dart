@@ -47,6 +47,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     // songList = await helper.getDataCountLists(
     //   count: 20,
     // );
+    // print(songList.length);
     ref.read(songCountProvider.notifier).update((state) => songList.length);
   }
 
@@ -57,14 +58,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final state = ref.watch(filteredSongListProvider);
     // ref.read(songCountProvider.notifier).update((state1) => state.length);
     final count = ref.watch(songCountProvider);
-    // final totalCount = ref.watch(songsAllCountProvider);
-    // cnt = count;
-    // final janre = ref.watch(filterProvider);
-    if (state.isEmpty) {
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
-    }
+    final janre = ref.watch(filterProvider);
     return Scaffold(
       appBar: AppBar(
         title: const Text('My Like Songs'),
@@ -152,23 +146,29 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               width: 20,
             ),
             Expanded(
-              child: ListView.separated(
-                controller: controller,
-                itemCount: state.length,
-                separatorBuilder: (BuildContext context, int index) => SizedBox(
-                  height: 5,
-                  child: Container(
-                    color: Colors.grey.shade300,
-                    width: 100,
-                  ),
-                ),
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8),
-                    child: SongItemComponent(item: state[index]),
-                  );
-                },
-              ),
+              child: state.isEmpty
+                  ? Center(
+                      child: Text(
+                          '현재 ${janre.toString()}에 등록 된 곡이 없습니다.\n관리할 곡을 추가하세요.'),
+                    )
+                  : ListView.separated(
+                      controller: controller,
+                      itemCount: state.length,
+                      separatorBuilder: (BuildContext context, int index) =>
+                          SizedBox(
+                        height: 5,
+                        child: Container(
+                          color: Colors.grey.shade300,
+                          width: 100,
+                        ),
+                      ),
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          child: SongItemComponent(item: state[index]),
+                        );
+                      },
+                    ),
             )
           ],
         ),
@@ -264,6 +264,21 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               ref.read(filterProvider.notifier).update((state) => Janre.POP);
               final songs = ref.read(filteredSongListProvider);
               // print(songs.length);
+
+              ref.read(songCountProvider.notifier).update(
+                    (state) => songs.length,
+                  );
+            },
+          ),
+          ListTile(
+            title: const Text(
+              '댄스',
+              style: optionStyle1,
+            ),
+            onTap: () async {
+              Navigator.pop(context);
+              ref.read(filterProvider.notifier).update((state) => Janre.DANCE);
+              final songs = ref.read(filteredSongListProvider);
 
               ref.read(songCountProvider.notifier).update(
                     (state) => songs.length,
