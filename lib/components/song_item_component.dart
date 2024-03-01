@@ -65,7 +65,33 @@ class _SongItemComponent1State extends ConsumerState<SongItemComponent> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('곡명: ${widget.item.songName}, [${widget.item.songJanre}]'),
+              RichText(
+                text: TextSpan(
+                  style: const TextStyle(
+                    fontSize: 20.0,
+                    color: Colors.black,
+                  ),
+                  children: <TextSpan>[
+                    const TextSpan(
+                        text: '곡명: ',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blue,
+                            fontSize: 17)),
+                    TextSpan(
+                      text: '${widget.item.songName},',
+                    ),
+                    TextSpan(
+                      text: ' [${widget.item.songJanre}]',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.blue,
+                        fontSize: 15,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
               Text(
                   '금영 - ${widget.item.songGYNumber}, 태진 - ${widget.item.songTJNumber}'),
             ],
