@@ -63,8 +63,9 @@ class _SongItemComponent1State extends ConsumerState<SongItemComponent> {
         ),
         title: GestureDetector(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('${widget.item.songName} : [${widget.item.songJanre}]'),
+              Text('곡명: ${widget.item.songName}, [${widget.item.songJanre}]'),
               Text(
                   '금영 - ${widget.item.songGYNumber}, 태진 - ${widget.item.songTJNumber}'),
             ],

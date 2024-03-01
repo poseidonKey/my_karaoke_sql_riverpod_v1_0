@@ -136,7 +136,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               padding: const EdgeInsets.symmetric(vertical: 8),
               child: SizedBox(
                 width: double.infinity,
-                height: 3,
+                height: 5,
                 child: Container(
                   decoration: const BoxDecoration(color: Colors.red),
                 ),
@@ -156,10 +156,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       itemCount: state.length,
                       separatorBuilder: (BuildContext context, int index) =>
                           SizedBox(
-                        height: 5,
+                        height: 3,
                         child: Container(
-                          color: Colors.grey.shade300,
-                          width: 100,
+                          decoration: const BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [Colors.blue, Colors.green],
+                            ),
+                          ),
                         ),
                       ),
                       itemBuilder: (context, index) {
