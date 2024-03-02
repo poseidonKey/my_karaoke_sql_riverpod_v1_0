@@ -50,7 +50,8 @@ class SongSearchScreen extends ConsumerWidget {
                     songList = ref
                         .read(songItemListNotifierProvider.notifier)
                         .state
-                        .where((item) => item.songName.contains(search))
+                        .where((item) =>
+                            item.songName.toLowerCase().contains(search))
                         .toList();
                     ref.read(songSearchNotifierProvider.notifier).state =
                         songList;
