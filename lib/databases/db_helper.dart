@@ -104,9 +104,17 @@ class DbHelper {
   }
 
   Future<List<SongItemModel>> searchList(
-      String searchTerm, String target) async {
-    String query = "select * from mysongs where $target like '%$searchTerm%'";
+      String searchValue, String target) async {
+    String query = "select * from mysongs where $target like '%$searchValue%'";
+    // String query =
+    //     "SELECT * FROM mysongs WHERE $target COLLATE NOCASE LIKE '%$searchValue%'";
+    // String query =
+    //     "SELECT * FROM mysongs WHERE songName LIKE '%UNIcode('노래')%'";
+    // print(query);
+
+    // String query = "select * from mysongs where $target like '%$searchValue%'";
     final List<Map<String, dynamic>> maps = await db!.rawQuery(query);
+    print(maps);
     return maps
         .map(
           (e) => SongItemModel(

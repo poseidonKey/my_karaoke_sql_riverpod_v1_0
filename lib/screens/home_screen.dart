@@ -81,6 +81,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           ),
           IconButton(
             onPressed: () async {
+              // List<SongItemModel> songList;
+              // songList =
+              //     state.where((item) => item.songName.contains('내일')).toList();
+              // ref.read(songItemListNotifierProvider.notifier).state = songList;
               context.go('/home/searchSong');
             },
             icon: const Icon(Icons.search),
