@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:my_karaoke_sql_riverpod_v1_0/layout/defaut_layout.dart';
+import 'package:my_karaoke_sql_riverpod_v1_0/layout/default_layout.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/models/song_item_model.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/song_item_notifier_provider.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/song_search_notifier_provider.dart';

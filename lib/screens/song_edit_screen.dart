@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/databases/db_helper.dart';
-import 'package:my_karaoke_sql_riverpod_v1_0/layout/defaut_layout.dart';
+import 'package:my_karaoke_sql_riverpod_v1_0/layout/default_layout.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/models/song_item_model.dart';
 
 class SongEditScreen extends StatefulWidget {
