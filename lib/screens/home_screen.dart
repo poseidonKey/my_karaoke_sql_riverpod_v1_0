@@ -19,6 +19,7 @@ class HomeScreen extends ConsumerStatefulWidget {
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   final ScrollController controller = ScrollController();
+  final List<String> popupMenu = ['즐겨찾기 화면', '곡 찾기 화면'];
   @override
   void initState() {
     super.initState();
@@ -63,35 +64,51 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       appBar: AppBar(
         title: const Text('My Like Songs'),
         actions: [
-          const Text(
-            '즐•찾:',
-            style: TextStyle(
-                fontSize: 15, color: Colors.red, fontWeight: FontWeight.bold),
-          ),
-          IconButton(
-            onPressed: () {
-              context.go('/home/favoritySong');
+          PopupMenuButton(
+            itemBuilder: (_) {
+              return popupMenu
+                  .map(
+                    (e) => PopupMenuItem<String>(
+                      value: e,
+                      child: Text(e,
+                          style: const TextStyle(
+                              fontSize: 15,
+                              color: Colors.red,
+                              fontWeight: FontWeight.bold)),
+                    ),
+                  )
+                  .toList();
             },
-            icon: const Icon(Icons.favorite),
-          ),
-          const Text(
-            '곡찾기:',
-            style: TextStyle(
-                fontSize: 15, color: Colors.red, fontWeight: FontWeight.bold),
-          ),
-          IconButton(
-            onPressed: () async {
-              // List<SongItemModel> songList;
-              // songList =
-              //     state.where((item) => item.songName.contains('내일')).toList();
-              // ref.read(songItemListNotifierProvider.notifier).state = songList;
-              context.go('/home/searchSong');
+            onSelected: (value) {
+              if (value == '즐겨찾기 화면') {
+                context.go('/home/favoritySong');
+              } else {
+                context.go('/home/searchSong');
+              }
             },
-            icon: const Icon(Icons.search),
-          )
+          ),
+          // const Text(
+          //   '즐•찾:',
+          //   style: TextStyle(
+          //       fontSize: 15, color: Colors.red, fontWeight: FontWeight.bold),
+          // ),
           // IconButton(
-          //     onPressed: makeTestData, icon: const Icon(Icons.credit_card)),
-          // IconButton(onPressed: deleteTestData, icon: const Icon(Icons.delete)),
+          //   onPressed: () {
+          //     context.go('/home/favoritySong');
+          //   },
+          //   icon: const Icon(Icons.favorite),
+          // ),
+          // const Text(
+          //   '곡찾기:',
+          //   style: TextStyle(
+          //       fontSize: 15, color: Colors.red, fontWeight: FontWeight.bold),
+          // ),
+          // IconButton(
+          //   onPressed: () async {
+          //     context.go('/home/searchSong');
+          //   },
+          //   icon: const Icon(Icons.search),
+          // )
         ],
         bottom: const PreferredSize(
           preferredSize: Size.fromHeight(0.5),
