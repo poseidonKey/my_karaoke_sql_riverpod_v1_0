@@ -19,7 +19,7 @@ class HomeScreen extends ConsumerStatefulWidget {
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   final ScrollController controller = ScrollController();
-  final List<String> popupMenu = ['즐겨찾기 화면', '곡 찾기 화면'];
+  final List<String> popupMenu = ['즐겨찾기 화면', '곡 찾기 화면', 'DB 관리'];
   @override
   void initState() {
     super.initState();
@@ -82,6 +82,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             onSelected: (value) {
               if (value == '즐겨찾기 화면') {
                 context.go('/home/favoritySong');
+              } else if (value == 'DB 관리') {
+                context.go('/home/testDataManage');
               } else {
                 context.go('/home/searchSong');
               }
@@ -121,43 +123,44 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         child: Column(
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
                   // '총 곡수 : $count 곡, $janre',
-                  '총 곡수 : $count 곡,',
+                  '총 곡수 : $count 곡  ',
                   style: const TextStyle(
-                      color: Colors.lightBlue,
+                      color: Colors.deepPurple,
                       fontWeight: FontWeight.bold,
                       fontSize: 20),
                 ),
-                const SizedBox(
-                  width: 20,
-                ),
-                Row(
-                  children: [
-                    const Text(
-                      '곡 DB : ',
-                      style: TextStyle(
-                          fontSize: 20,
-                          color: Colors.red,
-                          fontWeight: FontWeight.w600),
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        context.go('/home/testDataManage');
-                      },
-                      icon: const Icon(Icons.add_to_queue),
-                    ),
-                  ],
-                ),
+                // const SizedBox(
+                //   width: 20,
+                // ),
+                // Row(
+                //   children: [
+                //     const Text(
+                //       '곡 DB : ',
+                //       style: TextStyle(
+                //           fontSize: 20,
+                //           color: Colors.red,
+                //           fontWeight: FontWeight.w600),
+                //     ),
+                //     IconButton(
+                //       onPressed: () {
+                //         context.go('/home/testDataManage');
+                //       },
+                //       icon: const Icon(Icons.add_to_queue),
+                //     ),
+                //   ],
+                // ),
               ],
             ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8),
               child: SizedBox(
                 width: double.infinity,
-                height: 5,
+                height: 3,
                 child: Container(
                   decoration: const BoxDecoration(color: Colors.red),
                 ),

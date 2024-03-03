@@ -21,7 +21,7 @@ class _AuthScreenState extends State<AuthScreen> {
 
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        padding: const EdgeInsets.symmetric(horizontal: 32.0),
         child: Form(
           key: formKey,
           child: Column(
@@ -34,7 +34,7 @@ class _AuthScreenState extends State<AuthScreen> {
                   radius: 100,
                   child: Image.asset(
                     'assets/img/logo.png',
-                    width: MediaQuery.of(context).size.width * 0.5,
+                    width: MediaQuery.of(context).size.width * 0.3,
                   ),
                 ),
               ),
@@ -107,6 +107,21 @@ class _AuthScreenState extends State<AuthScreen> {
                 },
                 child: const Text(
                   '로그인',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+              const SizedBox(
+                height: 30,
+              ),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.black,
+                ),
+                onPressed: () async {
+                  context.go('/home');
+                },
+                child: const Text(
+                  '내장 SQL 이용',
                   style: TextStyle(color: Colors.white),
                 ),
               ),
