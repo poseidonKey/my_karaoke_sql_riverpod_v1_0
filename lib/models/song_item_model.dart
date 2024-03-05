@@ -1,4 +1,4 @@
-enum Janre {
+enum Jenre {
   BALLADE,
   DANCE,
   TROT,

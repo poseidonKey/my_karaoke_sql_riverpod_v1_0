@@ -244,7 +244,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ),
             onTap: () async {
               Navigator.pop(context);
-              ref.read(filterProvider.notifier).update((state) => Janre.ALL);
+              ref.read(filterProvider.notifier).update((state) => Jenre.ALL);
               final songs = ref.read(filteredSongListProvider);
               ref.read(songCountProvider.notifier).update(
                     (state) => songs.length,
@@ -260,7 +260,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               Navigator.pop(context);
               ref
                   .read(filterProvider.notifier)
-                  .update((state) => Janre.BALLADE);
+                  .update((state) => Jenre.BALLADE);
               final songs = ref.read(filteredSongListProvider);
               ref.read(songCountProvider.notifier).update(
                     (state) => songs.length,
@@ -274,7 +274,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ),
             onTap: () async {
               Navigator.pop(context);
-              ref.read(filterProvider.notifier).update((state) => Janre.TROT);
+              ref.read(filterProvider.notifier).update((state) => Jenre.TROT);
               final songs = ref.read(filteredSongListProvider);
               // print(songs.length);
 
@@ -290,7 +290,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ),
             onTap: () async {
               Navigator.pop(context);
-              ref.read(filterProvider.notifier).update((state) => Janre.POP);
+              ref.read(filterProvider.notifier).update((state) => Jenre.POP);
               final songs = ref.read(filteredSongListProvider);
               // print(songs.length);
 
@@ -306,7 +306,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ),
             onTap: () async {
               Navigator.pop(context);
-              ref.read(filterProvider.notifier).update((state) => Janre.DANCE);
+              ref.read(filterProvider.notifier).update((state) => Jenre.DANCE);
               final songs = ref.read(filteredSongListProvider);
 
               ref.read(songCountProvider.notifier).update(
@@ -323,7 +323,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               Navigator.pop(context);
               ref
                   .read(filterProvider.notifier)
-                  .update((state) => Janre.CLASSIC);
+                  .update((state) => Jenre.CLASSIC);
               final songs = ref.read(filteredSongListProvider);
 
               ref.read(songCountProvider.notifier).update(
