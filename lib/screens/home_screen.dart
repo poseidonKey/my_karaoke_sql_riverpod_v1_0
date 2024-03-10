@@ -9,6 +9,7 @@ import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/filtered_song_list_provid
 import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/songs_count_provider.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/screens/random_home_screen.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/screens/song_add_screen.dart';
+import 'package:my_karaoke_sql_riverpod_v1_0/screens/song_janre_category_screen.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -355,10 +356,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ),
             onTap: () {
               Navigator.pop(context);
-              Navigator.pushReplacement(
+              Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => Container(),
+                  builder: (context) => const SongJanreCategoryScreen(),
                 ),
               );
             },

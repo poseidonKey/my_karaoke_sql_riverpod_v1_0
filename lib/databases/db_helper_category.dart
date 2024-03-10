@@ -14,10 +14,10 @@ class DbHelperCategory {
   }
   Future<Database> openDbCategory() async {
     dbCate ??=
-        await openDatabase(join(await getDatabasesPath(), 'mysongscate.db'),
+        await openDatabase(join(await getDatabasesPath(), 'mysongscategory.db'),
             onCreate: (database, version) {
       database.execute(
-          'CREATE TABLE mysongscategory(id INTEGER PRIMARY KEY, songJanreCate text )');
+          'CREATE TABLE mysongscategory(id INTEGER PRIMARY KEY, songJanreCategory text )');
     }, version: version);
     return dbCate!;
   }
@@ -31,7 +31,7 @@ class DbHelperCategory {
 
     return List.generate(maps.length, (i) {
       return SongItemCategory(
-          maps[i]["id"].toString(), maps[i]["songJanreCate"]);
+          maps[i]["id"].toString(), maps[i]["songJanreCategory"]);
     });
   }
 
@@ -52,7 +52,7 @@ class DbHelperCategory {
 
   Future<void> changeSongName(SongItemCategory list, String val) async {
     await dbCate!.rawUpdate(
-        "update mysongscategory set songJanreCate='$val' where id=${list.id}");
+        "update mysongscategory set songJanreCategory='$val' where id=${list.id}");
   }
 
   Future<String> deleteAllList() async {
@@ -67,7 +67,7 @@ class DbHelperCategory {
     final List<Map<String, dynamic>> maps = await dbCate!.rawQuery(query);
     return maps
         .map(
-          (e) => SongItemCategory(e["id"].toString(), e["songJanreCate"]),
+          (e) => SongItemCategory(e["id"].toString(), e["songJanreCategory"]),
         )
         .toList();
   }
