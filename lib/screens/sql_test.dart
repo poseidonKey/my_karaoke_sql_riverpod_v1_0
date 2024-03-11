@@ -26,6 +26,25 @@ class _SqlTestState extends State<SqlTest> {
         children: [
           Text('message : $msg'),
           ElevatedButton(
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                        title: const Text('title :title'),
+                        content: const Text('content: content'),
+                        actions: [
+                          TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text('Close'))
+                        ]);
+                  },
+                );
+              },
+              child: const Text('test')),
+          ElevatedButton(
               onPressed: () async {
                 dbCate = await openDbCategory();
                 setState(() {
@@ -80,9 +99,6 @@ class _SqlTestState extends State<SqlTest> {
   }
 
   Future<String> deleteTestDatabase() async {
-    // final resp =
-    //     await dbCate!.query("SELECT * FROM drop database if exists mycate");
-    // return resp.toString();
     String databasePath = join(await getDatabasesPath(), 'mycate.db');
 
     // Check if the database file exists
