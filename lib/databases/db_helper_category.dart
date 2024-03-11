@@ -25,6 +25,7 @@ class DbHelperCategory {
   Future<List<SongItemCategory>> getLists() async {
     final List<Map<String, dynamic>> maps =
         await dbCate!.query('mysongscategory');
+    print(maps);
     if (maps.isEmpty) {
       return [];
     }

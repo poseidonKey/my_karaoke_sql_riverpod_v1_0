@@ -11,7 +11,6 @@ class SongCategoryListNotifier extends StateNotifier<List<SongItemCategory>> {
   SongCategoryListNotifier() : super([]) {
     final tmp = getDBData();
     tmp.then((value) => state = value);
-    // state = getDBData() as List<SongItemModel>;
   }
 
   Future<List<SongItemCategory>> getDBData() async {

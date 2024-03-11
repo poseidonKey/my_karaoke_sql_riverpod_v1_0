@@ -10,7 +10,7 @@ class SongItemCategory {
   Map<String, dynamic> toMap() {
     return {
       "id": (id == 0) ? null : id,
-      "songJanreCate": songJanreCategory,
+      "songJanreCategory": songJanreCategory,
     };
   }
 }

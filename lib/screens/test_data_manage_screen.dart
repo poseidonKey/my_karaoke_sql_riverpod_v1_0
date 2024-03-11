@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/databases/db_helper.dart';
+import 'package:my_karaoke_sql_riverpod_v1_0/databases/db_helper_category.dart';
+import 'package:my_karaoke_sql_riverpod_v1_0/models/song_item_category.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/models/song_item_model.dart';
 
 class TestDataManage extends StatelessWidget {
@@ -18,6 +20,12 @@ class TestDataManage extends StatelessWidget {
           children: [
             ElevatedButton(
                 onPressed: () => makeMyData(), child: const Text('내 데이터 만들기')),
+            const SizedBox(
+              height: 20,
+            ),
+            ElevatedButton(
+                onPressed: () => makeMyDataCategory(),
+                child: const Text('내 Category 데이터 만들기')),
             const SizedBox(
               height: 20,
             ),
@@ -128,6 +136,28 @@ class TestDataManage extends StatelessWidget {
       await helper.openDb();
       var result = await helper.deleteAllList();
       if (result == 'success') print("Success");
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void makeMyDataCategory() async {
+    List<Map<String, String>> list = [
+      {'songJanreCategory': '발라드'},
+      {'songJanreCategory': '트로트'},
+      {'songJanreCategory': '팝'},
+      {'songJanreCategory': '댄스'},
+      {'songJanreCategory': '클래식'},
+    ];
+    print(list);
+    try {
+      DbHelperCategory helper = DbHelperCategory();
+      await helper.openDbCategory();
+      for (var i = 0; i < list.length; i++) {
+        final song = SongItemCategory(null, list[i]['songJanreCategory']!);
+
+        await helper.insertList(song);
+      }
     } catch (e) {
       print(e);
     }
