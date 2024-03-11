@@ -5,7 +5,7 @@ import 'package:sqflite/sqflite.dart';
 class DbHelperCategory {
   final int version = 1;
   Database? dbCate;
-  final String tableName = 'songsCategory3';
+  final String tableName = 'mysongscategory';
 
   static final DbHelperCategory _dbHelperCategory =
       DbHelperCategory._internal();
@@ -13,10 +13,18 @@ class DbHelperCategory {
   factory DbHelperCategory() {
     return _dbHelperCategory;
   }
+
+  Future<bool> tableExists(Database db, String tableName) async {
+    List<Map<String, dynamic>> tables = await db.rawQuery(
+      "SELECT name FROM sqlite_master WHERE type='table' AND name='$tableName'",
+    );
+    return tables.isNotEmpty;
+  }
+
   Future<Database> openDbCategory() async {
-    dbCate ??= await openDatabase(
-        join(await getDatabasesPath(), 'mysongscategory3.db'),
-        onCreate: (database, version) {
+    dbCate ??=
+        await openDatabase(join(await getDatabasesPath(), 'mysongscategory.db'),
+            onCreate: (database, version) {
       database.execute(
           'CREATE TABLE ${_dbHelperCategory.tableName}(id INTEGER PRIMARY KEY, songJanreCategory text )');
     }, version: version);
@@ -26,7 +34,6 @@ class DbHelperCategory {
   Future<List<SongItemCategory>> getLists() async {
     final List<Map<String, dynamic>> maps =
         await dbCate!.query(_dbHelperCategory.tableName);
-    print(maps);
     if (maps.isEmpty) {
       return [];
     }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/components/login_text_field.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/const/const.dart';
+import 'package:my_karaoke_sql_riverpod_v1_0/screens/sql_test.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({Key? key}) : super(key: key);
@@ -112,6 +113,22 @@ class _AuthScreenState extends State<AuthScreen> {
               ),
               const SizedBox(
                 height: 30,
+              ),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.black,
+                ),
+                onPressed: () async {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const SqlTest(),
+                    ),
+                  );
+                },
+                child: const Text(
+                  'SQL Test',
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(

@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/databases/db_helper.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/databases/db_helper_category.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/models/song_item_category.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/models/song_item_model.dart';
+import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/song_category_notifier_provider.dart';
 
-class TestDataManage extends StatelessWidget {
+class TestDataManage extends ConsumerWidget {
   const TestDataManage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Database Management'),
@@ -19,18 +21,19 @@ class TestDataManage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             ElevatedButton(
-                onPressed: () => makeMyData(), child: const Text('내 데이터 만들기')),
+                onPressed: () => makeMyData(),
+                child: const Text('내 song 데이터 만들기')),
             const SizedBox(
               height: 20,
             ),
             ElevatedButton(
-                onPressed: () => makeMyDataCategory(),
+                onPressed: () => makeMyDataCategory(context: context, ref: ref),
                 child: const Text('내 Category 데이터 만들기')),
             const SizedBox(
               height: 20,
             ),
             ElevatedButton(
-                onPressed: () => deleteCategoryTestTable,
+                onPressed: () => deleteCategoryTestTable(context),
                 child: const Text('내 Category 데이터 table 지우기')),
             const SizedBox(
               height: 20,
@@ -130,17 +133,20 @@ class TestDataManage extends StatelessWidget {
     try {
       DbHelper helper = DbHelper();
       await helper.openDb();
-      await helper.db!.rawQuery("drop table if exists mysongs");
+      await helper.db!.execute("drop table if exists mysongs");
+      await helper.db!.close();
     } catch (e) {
       print(e);
     }
   }
 
-  void deleteCategoryTestTable() async {
+  void deleteCategoryTestTable(BuildContext context) async {
     try {
       DbHelperCategory helper = DbHelperCategory();
       await helper.openDbCategory();
-      await helper.dbCate!.rawQuery("drop table if exists songsCategory3");
+      await helper.dbCate!.execute("drop table if exists mysongscategory");
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('message : category Delete!!')));
     } catch (e) {
       print(e);
     }
@@ -157,7 +163,8 @@ class TestDataManage extends StatelessWidget {
     }
   }
 
-  void makeMyDataCategory() async {
+  void makeMyDataCategory(
+      {required BuildContext context, required WidgetRef ref}) async {
     List<Map<String, String>> list = [
       {'songJanreCategory': '발라드'},
       {'songJanreCategory': '트로트'},
@@ -169,11 +176,26 @@ class TestDataManage extends StatelessWidget {
     try {
       DbHelperCategory helper = DbHelperCategory();
       await helper.openDbCategory();
+      String tableName = 'mysongscategory';
+      // Database database = await openDatabase(
+      //   join(await getDatabasesPath(), 'mysongscategory.db'),
+      //   version: 1,
+      // );
+      final isExist = await helper.tableExists(helper.dbCate!, tableName);
+      if (!isExist) {
+        await helper.dbCate!.execute('''
+    CREATE TABLE $tableName(id INTEGER PRIMARY KEY, songJanreCategory text )
+  ''');
+      }
       for (var i = 0; i < list.length; i++) {
         final song = SongItemCategory(null, list[i]['songJanreCategory']!);
 
         await helper.insertList(song);
       }
+      ref.read(songCategoryListNotifierProvider.notifier).state =
+          await helper.getLists();
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('message : Test category Data Make!')));
     } catch (e) {
       print(e);
     }
