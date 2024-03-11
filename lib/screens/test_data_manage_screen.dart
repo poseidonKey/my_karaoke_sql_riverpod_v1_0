@@ -30,6 +30,12 @@ class TestDataManage extends StatelessWidget {
               height: 20,
             ),
             ElevatedButton(
+                onPressed: () => deleteCategoryTestTable,
+                child: const Text('내 Category 데이터 table 지우기')),
+            const SizedBox(
+              height: 20,
+            ),
+            ElevatedButton(
                 onPressed: () => makeTestData(count: 5),
                 child: const Text('5개 만들기')),
             const SizedBox(
@@ -130,6 +136,16 @@ class TestDataManage extends StatelessWidget {
     }
   }
 
+  void deleteCategoryTestTable() async {
+    try {
+      DbHelperCategory helper = DbHelperCategory();
+      await helper.openDbCategory();
+      await helper.dbCate!.rawQuery("drop table if exists songsCategory3");
+    } catch (e) {
+      print(e);
+    }
+  }
+
   void deleteTestData() async {
     try {
       DbHelper helper = DbHelper();
@@ -149,7 +165,7 @@ class TestDataManage extends StatelessWidget {
       {'songJanreCategory': '댄스'},
       {'songJanreCategory': '클래식'},
     ];
-    print(list);
+    // print(list);
     try {
       DbHelperCategory helper = DbHelperCategory();
       await helper.openDbCategory();

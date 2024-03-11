@@ -5,6 +5,7 @@ import 'package:sqflite/sqflite.dart';
 class DbHelperCategory {
   final int version = 1;
   Database? dbCate;
+  final String tableName = 'songsCategory3';
 
   static final DbHelperCategory _dbHelperCategory =
       DbHelperCategory._internal();
@@ -13,18 +14,18 @@ class DbHelperCategory {
     return _dbHelperCategory;
   }
   Future<Database> openDbCategory() async {
-    dbCate ??=
-        await openDatabase(join(await getDatabasesPath(), 'mysongscategory.db'),
-            onCreate: (database, version) {
+    dbCate ??= await openDatabase(
+        join(await getDatabasesPath(), 'mysongscategory3.db'),
+        onCreate: (database, version) {
       database.execute(
-          'CREATE TABLE mysongscategory(id INTEGER PRIMARY KEY, songJanreCategory text )');
+          'CREATE TABLE ${_dbHelperCategory.tableName}(id INTEGER PRIMARY KEY, songJanreCategory text )');
     }, version: version);
     return dbCate!;
   }
 
   Future<List<SongItemCategory>> getLists() async {
     final List<Map<String, dynamic>> maps =
-        await dbCate!.query('mysongscategory');
+        await dbCate!.query(_dbHelperCategory.tableName);
     print(maps);
     if (maps.isEmpty) {
       return [];
@@ -38,7 +39,7 @@ class DbHelperCategory {
 
   Future<int> insertList(SongItemCategory list) async {
     int id = await dbCate!.insert(
-      'mysongscategory',
+      _dbHelperCategory.tableName,
       list.toMap(),
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
@@ -46,25 +47,25 @@ class DbHelperCategory {
   }
 
   Future<int> deleteList(SongItemCategory list) async {
-    int id = await dbCate!
-        .delete("mysongscategory", where: "id = ?", whereArgs: [list.id]);
+    int id = await dbCate!.delete(_dbHelperCategory.tableName,
+        where: "id = ?", whereArgs: [list.id]);
     return id;
   }
 
   Future<void> changeSongName(SongItemCategory list, String val) async {
     await dbCate!.rawUpdate(
-        "update mysongscategory set songJanreCategory='$val' where id=${list.id}");
+        "update ${_dbHelperCategory.tableName} set songJanreCategory='$val' where id=${list.id}");
   }
 
   Future<String> deleteAllList() async {
-    await dbCate!.delete("mysongscategory");
+    await dbCate!.delete(_dbHelperCategory.tableName);
     return 'delete success';
   }
 
   Future<List<SongItemCategory>> searchList(
       String searchTerm, String target) async {
     String query =
-        "select * from mysongscategory where $target like '%$searchTerm%'";
+        "select * from ${_dbHelperCategory.tableName} where $target like '%$searchTerm%'";
     final List<Map<String, dynamic>> maps = await dbCate!.rawQuery(query);
     return maps
         .map(
