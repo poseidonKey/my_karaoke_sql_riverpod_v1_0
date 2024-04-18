@@ -37,6 +37,7 @@ class DbHelperCategory {
     if (maps.isEmpty) {
       return [];
     }
+    // print(maps);
 
     return List.generate(maps.length, (i) {
       return SongItemCategory(
@@ -59,7 +60,7 @@ class DbHelperCategory {
     return id;
   }
 
-  Future<void> changeSongName(SongItemCategory list, String val) async {
+  Future<void> changeSongItemCategory(SongItemCategory list, String val) async {
     await dbCate!.rawUpdate(
         "update ${_dbHelperCategory.tableName} set songJanreCategory='$val' where id=${list.id}");
   }
@@ -67,6 +68,17 @@ class DbHelperCategory {
   Future<String> deleteAllList() async {
     await dbCate!.delete(_dbHelperCategory.tableName);
     return 'delete success';
+  }
+
+  Future<List<SongItemCategory>> lastID() async {
+    String query =
+        'SELECT * FROM ${_dbHelperCategory.tableName} WHERE ID = (SELECT MAX(ID) FROM ${_dbHelperCategory.tableName});';
+    final List<Map<String, dynamic>> maps = await dbCate!.rawQuery(query);
+    return maps
+        .map(
+          (e) => SongItemCategory(e["id"].toString(), e["songJanreCategory"]),
+        )
+        .toList();
   }
 
   Future<List<SongItemCategory>> searchList(

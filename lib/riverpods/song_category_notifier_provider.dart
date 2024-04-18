@@ -22,9 +22,22 @@ class SongCategoryListNotifier extends StateNotifier<List<SongItemCategory>> {
     if (songCategoryList.isEmpty) {
       songCategoryList = [];
     } else {
-      songCategoryList = songCategoryList;
+      state = songCategoryList;
     }
 
     return songCategoryList;
+  }
+
+  Future<void> getDBDataRefresh() async {
+    DbHelperCategory helper = DbHelperCategory();
+    List<SongItemCategory> songCategoryList = [];
+
+    await helper.openDbCategory();
+    songCategoryList = await helper.getLists();
+    if (songCategoryList.isEmpty) {
+      songCategoryList = [];
+    } else {
+      state = songCategoryList;
+    }
   }
 }

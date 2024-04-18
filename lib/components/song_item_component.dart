@@ -77,10 +77,11 @@ class _SongItemComponent1State extends ConsumerState<SongItemComponent> {
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.blue,
-                            fontSize: 17)),
+                            fontSize: 16)),
                     TextSpan(
-                      text: '${widget.item.songName},',
-                    ),
+                        text: '${widget.item.songName} -',
+                        style: const TextStyle(
+                            fontWeight: FontWeight.w600, fontSize: 20)),
                     TextSpan(
                       text: ' [${widget.item.songJanre}]',
                       style: const TextStyle(
@@ -93,7 +94,11 @@ class _SongItemComponent1State extends ConsumerState<SongItemComponent> {
                 ),
               ),
               Text(
-                  '금영 - ${widget.item.songGYNumber}, 태진 - ${widget.item.songTJNumber}'),
+                '금영 - ${widget.item.songGYNumber}, 태진 - 12345',
+                // '금영 - ${widget.item.songGYNumber}, 태진 - ${widget.item.songTJNumber}',
+                style:
+                    const TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+              ),
             ],
           ),
           onTap: () {

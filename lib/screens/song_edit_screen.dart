@@ -22,6 +22,11 @@ class _SongEditScreenState extends State<SongEditScreen> {
   final String _songFavorite = "false";
   String _selJanre = "";
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final bottomInset = MediaQuery.of(context).viewInsets.bottom;
     return DefaultLayout(
@@ -54,6 +59,7 @@ class _SongEditScreenState extends State<SongEditScreen> {
                         filled: true,
                         labelText: '곡명',
                       ),
+                      initialValue: widget.songItem.songName,
                       validator: (val) =>
                           val!.trim().isEmpty ? '곡명은 필수 입니다.' : null,
                       onSaved: (val) => _songName = val,
@@ -70,6 +76,7 @@ class _SongEditScreenState extends State<SongEditScreen> {
                         filled: true,
                         labelText: '금영노래방 번호',
                       ),
+                      initialValue: widget.songItem.songGYNumber,
                       keyboardType: TextInputType.number,
                       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                       // validator: (val) =>
@@ -88,6 +95,7 @@ class _SongEditScreenState extends State<SongEditScreen> {
                         filled: true,
                         labelText: '태진노래방 번호',
                       ),
+                      initialValue: widget.songItem.songTJNumber,
                       keyboardType: TextInputType.number,
                       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                       onSaved: (val) => _songTJNumber = val ?? "",
@@ -137,6 +145,7 @@ class _SongEditScreenState extends State<SongEditScreen> {
                         filled: true,
                         labelText: '관련 유튜브 주소',
                       ),
+                      initialValue: widget.songItem.songUtubeAddress,
                       onSaved: (val) => _songUtubeAddress = val ?? "",
                     ),
                   ),
@@ -151,6 +160,7 @@ class _SongEditScreenState extends State<SongEditScreen> {
                         filled: true,
                         labelText: '특기사항',
                       ),
+                      initialValue: widget.songItem.songETC,
                       onSaved: (val) => _songETC = val ?? "",
                     ),
                   ),
@@ -173,7 +183,7 @@ class _SongEditScreenState extends State<SongEditScreen> {
                   // ),
                   const SizedBox(height: 20.0),
                   ElevatedButton(
-                    onPressed: () => submit("add"),
+                    onPressed: () => submit("Edit"),
                     child: const Text(
                       'Add Song',
                       style: TextStyle(fontSize: 20.0),
