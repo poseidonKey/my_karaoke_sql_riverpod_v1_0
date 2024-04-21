@@ -44,6 +44,7 @@ dependencies:
     dio: 5.3.3
     shake: ^2.2.0
     webview_flutter: ^2.0.13
+    firebase_core: ^2.30.0
 
 dev_dependencies:
     flutter_test:

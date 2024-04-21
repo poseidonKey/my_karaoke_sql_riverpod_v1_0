@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "121449346263",
+    "project_id": "my-karaoke-riverpod",
+    "storage_bucket": "my-karaoke-riverpod.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:121449346263:android:137737de84ea7dc7a46c92",
+        "android_client_info": {
+          "package_name": "com.example.my_karaoke_sql_riverpod_v1_0"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB0MsiG8DuNE1RbFpCrB8amCzniLnDwX-Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
