@@ -142,6 +142,18 @@ class _AuthScreenState extends State<AuthScreen> {
                   style: TextStyle(color: Colors.white),
                 ),
               ),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.black,
+                ),
+                onPressed: () async {
+                  context.go('/home_fb');
+                },
+                child: const Text(
+                  'firebase 이용',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
             ],
           ),
         ),

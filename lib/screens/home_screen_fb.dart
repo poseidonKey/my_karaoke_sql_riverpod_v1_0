@@ -1,33 +1,34 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:my_karaoke_sql_riverpod_v1_0/components/song_item_component.dart';
+import 'package:my_karaoke_sql_riverpod_v1_0/components/song_item_component_fb.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/const/const.dart';
-import 'package:my_karaoke_sql_riverpod_v1_0/databases/db_helper.dart';
-import 'package:my_karaoke_sql_riverpod_v1_0/models/song_item_model.dart';
-import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/filtered_song_list_provider.dart';
-import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/song_item_notifier_provider.dart';
-import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/songs_count_provider.dart';
+import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/song_item_notifier_fb_provider.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/screens/random_home_screen.dart';
-import 'package:my_karaoke_sql_riverpod_v1_0/screens/song_add_screen.dart';
+import 'package:my_karaoke_sql_riverpod_v1_0/screens/song_add_screen_fb.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/screens/song_janre_category_screen.dart';
 
-class HomeScreen extends ConsumerStatefulWidget {
-  const HomeScreen({super.key});
+class HomeScreenFirebase extends ConsumerStatefulWidget {
+  const HomeScreenFirebase({super.key});
 
   @override
-  ConsumerState<HomeScreen> createState() => _HomeScreenState();
+  ConsumerState<HomeScreenFirebase> createState() => _HomeScreenFirebaseState();
 }
 
-class _HomeScreenState extends ConsumerState<HomeScreen> {
+class _HomeScreenFirebaseState extends ConsumerState<HomeScreenFirebase> {
   final ScrollController controller = ScrollController();
   final List<String> popupMenu = ['즐겨찾기 화면', '곡 찾기 화면', 'DB 관리'];
   @override
   void initState() {
     super.initState();
     controller.addListener(scrollListener);
-    getDBCount();
+  }
+
+  @override
+  void dispose() {
+    controller.removeListener(scrollListener);
+    controller.dispose();
+    super.dispose();
   }
 
   void scrollListener() {
@@ -37,32 +38,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     }
   }
 
-  Future<void> getDBCount() async {
-    DbHelper helper = DbHelper();
-    List<SongItemModel> songList;
-    List<SongItemModel> songsAllList;
-
-    await helper.openDb();
-    songsAllList = await helper.getDataAllLists();
-    ref
-        .read(songsAllCountProvider.notifier)
-        .update((state) => songsAllList.length);
-    songList = await helper.getDataAllLists();
-    // songList = await helper.getDataCountLists(
-    //   count: 20,
-    // );
-    // print(songList.length);
-    ref.read(songCountProvider.notifier).update((state) => songList.length);
-  }
-
   @override
-  Widget build(
-    BuildContext context,
-  ) {
-    final state = ref.watch(filteredSongListProvider);
-    // ref.read(songCountProvider.notifier).update((state1) => state.length);
-    final count = ref.watch(songCountProvider);
-    final janre = ref.watch(filterProvider);
+  Widget build(BuildContext context) {
+    final state = ref.watch(songListFirebaseProvider);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('My Like Songs'),
@@ -92,28 +71,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               }
             },
           ),
-          // const Text(
-          //   '즐•찾:',
-          //   style: TextStyle(
-          //       fontSize: 15, color: Colors.red, fontWeight: FontWeight.bold),
-          // ),
-          // IconButton(
-          //   onPressed: () {
-          //     context.go('/home/favoritySong');
-          //   },
-          //   icon: const Icon(Icons.favorite),
-          // ),
-          // const Text(
-          //   '곡찾기:',
-          //   style: TextStyle(
-          //       fontSize: 15, color: Colors.red, fontWeight: FontWeight.bold),
-          // ),
-          // IconButton(
-          //   onPressed: () async {
-          //     context.go('/home/searchSong');
-          //   },
-          //   icon: const Icon(Icons.search),
-          // )
         ],
         bottom: const PreferredSize(
           preferredSize: Size.fromHeight(0.5),
@@ -121,42 +78,21 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         ),
       ),
       drawer: _drawer(context, ref),
-      body: Padding(
-        padding: const EdgeInsets.only(left: 8, right: 8, bottom: 50),
+      body: SafeArea(
         child: Column(
           children: [
-            Row(
+            const Row(
               mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
                   // '총 곡수 : $count 곡, $janre',
-                  '총 곡수 : $count 곡  ',
-                  style: const TextStyle(
+                  '총 곡수 : count 곡  ',
+                  style: TextStyle(
                       color: Colors.deepPurple,
                       fontWeight: FontWeight.bold,
                       fontSize: 20),
                 ),
-                // const SizedBox(
-                //   width: 20,
-                // ),
-                // Row(
-                //   children: [
-                //     const Text(
-                //       '곡 DB : ',
-                //       style: TextStyle(
-                //           fontSize: 20,
-                //           color: Colors.red,
-                //           fontWeight: FontWeight.w600),
-                //     ),
-                //     IconButton(
-                //       onPressed: () {
-                //         context.go('/home/testDataManage');
-                //       },
-                //       icon: const Icon(Icons.add_to_queue),
-                //     ),
-                //   ],
-                // ),
               ],
             ),
             Padding(
@@ -174,12 +110,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ),
             Expanded(
               child: state.isEmpty
-                  ? Center(
-                      child: Text(
-                          '현재 ${janre.toString()}에 등록 된 곡이 없습니다.\n관리할 곡을 추가하세요.'),
+                  ? const Center(
+                      child: Text('현재 에 등록 된 곡이 없습니다.\n관리할 곡을 추가하세요.'),
                     )
                   : ListView.separated(
-                      controller: controller,
                       itemCount: state.length,
                       separatorBuilder: (BuildContext context, int index) =>
                           SizedBox(
@@ -197,7 +131,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       itemBuilder: (context, index) {
                         return Padding(
                           padding: const EdgeInsets.symmetric(vertical: 8),
-                          child: SongItemComponent(item: state[index]),
+                          child: state[index] == null
+                              ? const Center(
+                                  child: CircularProgressIndicator(),
+                                )
+                              : SongItemComponentFirebase(
+                                  index: index, item: state[index]!),
                         );
                       },
                     ),
@@ -207,8 +146,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          await Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => const SongAddScreen()));
+          await Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => const SongAddScreenFirebase()));
           // print(result);
           // if (result == 'success') {
           //   // await ref
@@ -247,11 +186,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ),
             onTap: () async {
               Navigator.pop(context);
-              ref.read(filterProvider.notifier).update((state) => Jenre.ALL);
-              final songs = ref.read(filteredSongListProvider);
-              ref.read(songCountProvider.notifier).update(
-                    (state) => songs.length,
-                  );
+              // ref.read(filterProvider.notifier).update((state) => Jenre.ALL);
+              // final songs = ref.read(filteredSongListProvider);
+              // ref.read(songCountProvider.notifier).update(
+              //       (state) => songs.length,
+              //     );
             },
           ),
           ListTile(
@@ -261,13 +200,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ),
             onTap: () async {
               Navigator.pop(context);
-              ref
-                  .read(filterProvider.notifier)
-                  .update((state) => Jenre.BALLADE);
-              final songs = ref.read(filteredSongListProvider);
-              ref.read(songCountProvider.notifier).update(
-                    (state) => songs.length,
-                  );
+              // ref
+              //     .read(filterProvider.notifier)
+              //     .update((state) => Jenre.BALLADE);
+              // final songs = ref.read(filteredSongListProvider);
+              // ref.read(songCountProvider.notifier).update(
+              //       (state) => songs.length,
+              //     );
             },
           ),
           ListTile(
@@ -277,13 +216,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ),
             onTap: () async {
               Navigator.pop(context);
-              ref.read(filterProvider.notifier).update((state) => Jenre.TROT);
-              final songs = ref.read(filteredSongListProvider);
-              // print(songs.length);
+              // ref.read(filterProvider.notifier).update((state) => Jenre.TROT);
+              // final songs = ref.read(filteredSongListProvider);
+              // // print(songs.length);
 
-              ref.read(songCountProvider.notifier).update(
-                    (state) => songs.length,
-                  );
+              // ref.read(songCountProvider.notifier).update(
+              //       (state) => songs.length,
+              //     );
             },
           ),
           ListTile(
@@ -293,13 +232,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ),
             onTap: () async {
               Navigator.pop(context);
-              ref.read(filterProvider.notifier).update((state) => Jenre.POP);
-              final songs = ref.read(filteredSongListProvider);
-              // print(songs.length);
+              // ref.read(filterProvider.notifier).update((state) => Jenre.POP);
+              // final songs = ref.read(filteredSongListProvider);
+              // // print(songs.length);
 
-              ref.read(songCountProvider.notifier).update(
-                    (state) => songs.length,
-                  );
+              // ref.read(songCountProvider.notifier).update(
+              //       (state) => songs.length,
+              //     );
             },
           ),
           ListTile(
@@ -309,12 +248,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ),
             onTap: () async {
               Navigator.pop(context);
-              ref.read(filterProvider.notifier).update((state) => Jenre.DANCE);
-              final songs = ref.read(filteredSongListProvider);
+              // ref.read(filterProvider.notifier).update((state) => Jenre.DANCE);
+              // final songs = ref.read(filteredSongListProvider);
 
-              ref.read(songCountProvider.notifier).update(
-                    (state) => songs.length,
-                  );
+              // ref.read(songCountProvider.notifier).update(
+              //       (state) => songs.length,
+              //     );
             },
           ),
           ListTile(
@@ -324,14 +263,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ),
             onTap: () async {
               Navigator.pop(context);
-              ref
-                  .read(filterProvider.notifier)
-                  .update((state) => Jenre.CLASSIC);
-              final songs = ref.read(filteredSongListProvider);
+              // ref
+              //     .read(filterProvider.notifier)
+              //     .update((state) => Jenre.CLASSIC);
+              // final songs = ref.read(filteredSongListProvider);
 
-              ref.read(songCountProvider.notifier).update(
-                    (state) => songs.length,
-                  );
+              // ref.read(songCountProvider.notifier).update(
+              //       (state) => songs.length,
+              //     );
             },
           ),
           SizedBox(
@@ -393,14 +332,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           ),
           ElevatedButton(
               onPressed: () async {
-                final datas = ref.read(songItemListNotifierProvider);
-                for (SongItemModel item in datas) {
-                  final song = item.toMap();
-                  await FirebaseFirestore.instance
-                      .collection('songs')
-                      .doc(item.id)
-                      .set(song);
-                }
+                // final datas = ref.read(songListFirebaseProvider);
+                // for (SongItemModel? item in datas) {
+                //   final song = item?.toMap();
+                //   if (song != null) {
+                //     await FirebaseFirestore.instance
+                //         .collection('songs')
+                //         .doc(item!.id)
+                //         .set(song);
+                //   }
+                // }
               },
               child: const Text('fb make Data'))
         ],

@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 enum Jenre {
   BALLADE,
   DANCE,
@@ -28,6 +30,20 @@ class SongItemModel {
       this.songETC,
       this.songCreateTime,
       this.songFavorite);
+
+  factory SongItemModel.fromSnapshot(DocumentSnapshot snapshot) {
+    return SongItemModel(
+      snapshot['id'],
+      snapshot['songName'],
+      snapshot['songGYNumber'],
+      snapshot['songTJNumber'],
+      snapshot['songJanre'],
+      snapshot['songUtubeAddress'],
+      snapshot['songETC'],
+      snapshot['songCreateTime'],
+      snapshot['songFavorite'],
+    );
+  }
 
   Map<String, dynamic> toMap() {
     return {

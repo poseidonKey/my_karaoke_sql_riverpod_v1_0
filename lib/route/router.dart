@@ -3,6 +3,7 @@ import 'package:my_karaoke_sql_riverpod_v1_0/screens/auth_screen.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/screens/error_screen.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/screens/favority_song_screen.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/screens/home_screen.dart';
+import 'package:my_karaoke_sql_riverpod_v1_0/screens/home_screen_fb.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/screens/song_add_screen.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/screens/song_search_screen.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/screens/test_data_manage_screen.dart';
@@ -38,6 +39,12 @@ final router = GoRouter(
         ),
       ],
     ),
+    GoRoute(
+      path: '/home_fb',
+      builder: (context, state) {
+        return const HomeScreenFirebase();
+      },
+    )
   ],
   errorBuilder: (context, state) => ErrorScreen(
     error: state.error.toString(),
