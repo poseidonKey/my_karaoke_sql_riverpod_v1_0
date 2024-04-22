@@ -3,10 +3,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/components/song_item_component_fb.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/const/const.dart';
+import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/filtered_song_list_fb_provider.dart';
+import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/filtered_song_list_provider.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/song_item_notifier_fb_provider.dart';
+import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/songs_count_fb_provider.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/screens/random_home_screen.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/screens/song_add_screen_fb.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/screens/song_janre_category_screen.dart';
+
+import '../models/song_item_model.dart';
 
 class HomeScreenFirebase extends ConsumerStatefulWidget {
   const HomeScreenFirebase({super.key});
@@ -18,6 +23,9 @@ class HomeScreenFirebase extends ConsumerStatefulWidget {
 class _HomeScreenFirebaseState extends ConsumerState<HomeScreenFirebase> {
   final ScrollController controller = ScrollController();
   final List<String> popupMenu = ['즐겨찾기 화면', '곡 찾기 화면', 'DB 관리'];
+  String janre = '모든 곡';
+  bool isReversed = false;
+
   @override
   void initState() {
     super.initState();
@@ -40,11 +48,12 @@ class _HomeScreenFirebaseState extends ConsumerState<HomeScreenFirebase> {
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(songListFirebaseProvider);
+    final state = ref.watch(filteredSongListFirebaseProvider);
+    final count = state.length;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My Like Songs'),
+        title: const Text('My Like Songs [FB]'),
         actions: [
           PopupMenuButton(
             itemBuilder: (_) {
@@ -67,13 +76,13 @@ class _HomeScreenFirebaseState extends ConsumerState<HomeScreenFirebase> {
               } else if (value == 'DB 관리') {
                 context.go('/home/testDataManage');
               } else {
-                context.go('/home/searchSong');
+                context.go('/home_fb/searchSongFb');
               }
             },
           ),
         ],
         bottom: const PreferredSize(
-          preferredSize: Size.fromHeight(0.5),
+          preferredSize: Size.fromHeight(0.4),
           child: Divider(thickness: 0.5, height: 0.5, color: Colors.red),
         ),
       ),
@@ -81,37 +90,91 @@ class _HomeScreenFirebaseState extends ConsumerState<HomeScreenFirebase> {
       body: SafeArea(
         child: Column(
           children: [
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text(
-                  // '총 곡수 : $count 곡, $janre',
-                  '총 곡수 : count 곡  ',
-                  style: TextStyle(
-                      color: Colors.deepPurple,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20),
+                // FilledButton(
+                //     onPressed: () {
+                //       final data = ref.read(songListFirebaseProvider);
+                //       final result = data
+                //           .where((element) =>
+                //               element?.songName.contains('w') ?? false)
+                //           .toList();
+                //       for (var element in result) {
+                //         print(element?.songName);
+                //       }
+                //     },
+                //     child: const Text('test')),
+                IconButton(
+                  onPressed: () {
+                    // Toggle the sort order between ascending and descending
+                    // final sortOrder = ref.read(sortOrderProvider);
+                    if (isReversed) {
+                      ref.read(sortOrderProvider.notifier).state =
+                          SortOrder.ascending;
+                    } else {
+                      ref.read(sortOrderProvider.notifier).state =
+                          SortOrder.descending;
+                    }
+
+                    // state = data;
+                    // var source = ref.read(filteredSongListFirebaseProvider);
+                    // var source =
+                    //     List.from(ref.read(filteredSongListFirebaseProvider));
+
+                    // if (isReversed) {
+                    //   source.sort((a, b) =>
+                    //       (int.parse(a.id!)).compareTo(int.parse(b.id!)));
+                    // } else {
+                    //   source.sort((a, b) =>
+                    //       (int.parse(b.id!)).compareTo(int.parse(a.id!)));
+                    // }
+
+                    // ref.read(songListFirebaseProvider.notifier).state = source;
+                    isReversed = !isReversed;
+                  },
+                  icon: const Icon(Icons.flip),
+                  iconSize: 30,
+                  tooltip: '순서바꾸기',
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width * .7,
+                  decoration: const BoxDecoration(color: Colors.yellow),
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: Text(
+                      '총 곡수: $count 곡, 장르 : $janre',
+                      style: const TextStyle(
+                          color: Colors.deepPurple,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20),
+                    ),
+                  ),
                 ),
               ],
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              child: SizedBox(
-                width: double.infinity,
-                height: 3,
-                child: Container(
-                  decoration: const BoxDecoration(color: Colors.red),
-                ),
-              ),
-            ),
+            // Padding(
+            //   padding: const EdgeInsets.only(top: 8),
+            //   child: SizedBox(
+            //     width: double.infinity,
+            //     height: 2,
+            //     child: Center(
+            //       child: Container(
+            //         decoration: const BoxDecoration(
+            //           color: Color.fromARGB(255, 168, 74, 67),
+            //         ),
+            //       ),
+            //     ),
+            //   ),
+            // ),
             const SizedBox(
               width: 20,
             ),
             Expanded(
               child: state.isEmpty
                   ? const Center(
-                      child: Text('현재 에 등록 된 곡이 없습니다.\n관리할 곡을 추가하세요.'),
+                      child: Text('현재 등록 된 곡이 없습니다.\n관리할 곡을 추가하세요.'),
                     )
                   : ListView.separated(
                       itemCount: state.length,
@@ -136,7 +199,7 @@ class _HomeScreenFirebaseState extends ConsumerState<HomeScreenFirebase> {
                                   child: CircularProgressIndicator(),
                                 )
                               : SongItemComponentFirebase(
-                                  index: index, item: state[index]!),
+                                  index: index, item: state[index]),
                         );
                       },
                     ),
@@ -186,11 +249,14 @@ class _HomeScreenFirebaseState extends ConsumerState<HomeScreenFirebase> {
             ),
             onTap: () async {
               Navigator.pop(context);
-              // ref.read(filterProvider.notifier).update((state) => Jenre.ALL);
-              // final songs = ref.read(filteredSongListProvider);
-              // ref.read(songCountProvider.notifier).update(
-              //       (state) => songs.length,
-              //     );
+              ref
+                  .read(filterFirebaseProvider.notifier)
+                  .update((state) => Jenre.ALL);
+              final songs = ref.read(filteredSongListProvider);
+              ref.read(songCountFirebaseProvider.notifier).update(
+                    (state) => songs.length,
+                  );
+              janre = '모든 곡';
             },
           ),
           ListTile(
@@ -200,13 +266,14 @@ class _HomeScreenFirebaseState extends ConsumerState<HomeScreenFirebase> {
             ),
             onTap: () async {
               Navigator.pop(context);
-              // ref
-              //     .read(filterProvider.notifier)
-              //     .update((state) => Jenre.BALLADE);
-              // final songs = ref.read(filteredSongListProvider);
-              // ref.read(songCountProvider.notifier).update(
-              //       (state) => songs.length,
-              //     );
+              ref
+                  .read(filterFirebaseProvider.notifier)
+                  .update((state) => Jenre.BALLADE);
+              final songs = ref.read(filteredSongListFirebaseProvider);
+              ref.read(songCountFirebaseProvider.notifier).update(
+                    (state) => songs.length,
+                  );
+              janre = '발라드';
             },
           ),
           ListTile(
@@ -216,13 +283,14 @@ class _HomeScreenFirebaseState extends ConsumerState<HomeScreenFirebase> {
             ),
             onTap: () async {
               Navigator.pop(context);
-              // ref.read(filterProvider.notifier).update((state) => Jenre.TROT);
-              // final songs = ref.read(filteredSongListProvider);
-              // // print(songs.length);
-
-              // ref.read(songCountProvider.notifier).update(
-              //       (state) => songs.length,
-              //     );
+              ref
+                  .read(filterFirebaseProvider.notifier)
+                  .update((state) => Jenre.TROT);
+              final songs = ref.read(filteredSongListFirebaseProvider);
+              ref.read(songCountFirebaseProvider.notifier).update(
+                    (state) => songs.length,
+                  );
+              janre = '트로트';
             },
           ),
           ListTile(
@@ -232,13 +300,14 @@ class _HomeScreenFirebaseState extends ConsumerState<HomeScreenFirebase> {
             ),
             onTap: () async {
               Navigator.pop(context);
-              // ref.read(filterProvider.notifier).update((state) => Jenre.POP);
-              // final songs = ref.read(filteredSongListProvider);
-              // // print(songs.length);
-
-              // ref.read(songCountProvider.notifier).update(
-              //       (state) => songs.length,
-              //     );
+              ref
+                  .read(filterFirebaseProvider.notifier)
+                  .update((state) => Jenre.POP);
+              final songs = ref.read(filteredSongListFirebaseProvider);
+              ref.read(songCountFirebaseProvider.notifier).update(
+                    (state) => songs.length,
+                  );
+              janre = '팝송';
             },
           ),
           ListTile(
@@ -248,12 +317,14 @@ class _HomeScreenFirebaseState extends ConsumerState<HomeScreenFirebase> {
             ),
             onTap: () async {
               Navigator.pop(context);
-              // ref.read(filterProvider.notifier).update((state) => Jenre.DANCE);
-              // final songs = ref.read(filteredSongListProvider);
-
-              // ref.read(songCountProvider.notifier).update(
-              //       (state) => songs.length,
-              //     );
+              ref
+                  .read(filterFirebaseProvider.notifier)
+                  .update((state) => Jenre.DANCE);
+              final songs = ref.read(filteredSongListFirebaseProvider);
+              ref.read(songCountFirebaseProvider.notifier).update(
+                    (state) => songs.length,
+                  );
+              janre = '댄스';
             },
           ),
           ListTile(
@@ -263,14 +334,14 @@ class _HomeScreenFirebaseState extends ConsumerState<HomeScreenFirebase> {
             ),
             onTap: () async {
               Navigator.pop(context);
-              // ref
-              //     .read(filterProvider.notifier)
-              //     .update((state) => Jenre.CLASSIC);
-              // final songs = ref.read(filteredSongListProvider);
-
-              // ref.read(songCountProvider.notifier).update(
-              //       (state) => songs.length,
-              //     );
+              ref
+                  .read(filterFirebaseProvider.notifier)
+                  .update((state) => Jenre.CLASSIC);
+              final songs = ref.read(filteredSongListFirebaseProvider);
+              ref.read(songCountFirebaseProvider.notifier).update(
+                    (state) => songs.length,
+                  );
+              janre = '클래식';
             },
           ),
           SizedBox(

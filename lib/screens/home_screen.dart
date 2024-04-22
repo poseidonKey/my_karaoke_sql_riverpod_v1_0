@@ -65,7 +65,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final janre = ref.watch(filterProvider);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My Like Songs'),
+        title: const Text('My Like Songs [SQL]'),
         actions: [
           PopupMenuButton(
             itemBuilder: (_) {
