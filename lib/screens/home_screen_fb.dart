@@ -74,7 +74,7 @@ class _HomeScreenFirebaseState extends ConsumerState<HomeScreenFirebase> {
             },
             onSelected: (value) {
               if (value == '즐겨찾기 화면') {
-                context.go('/home/favoritySong');
+                context.go('/home_fb/favoriteSongFb');
               } else if (value == 'DB 관리') {
                 context.go('/home/testDataManage');
               } else {

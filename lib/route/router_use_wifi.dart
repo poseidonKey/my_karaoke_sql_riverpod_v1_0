@@ -1,5 +1,6 @@
 import 'package:go_router/go_router.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/screens/error_screen.dart';
+import 'package:my_karaoke_sql_riverpod_v1_0/screens/favority_song_fb_screen.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/screens/favority_song_screen.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/screens/home_screen.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/screens/home_screen_fb.dart';
@@ -48,6 +49,10 @@ final routerUseWifi = GoRouter(
           GoRoute(
             path: 'searchSongFb',
             builder: (context, state) => SongSearchScreenFirebase(),
+          ),
+          GoRoute(
+            path: 'favoriteSongFb',
+            builder: (context, state) => const FavoritySongFirebaseScreen(),
           ),
         ])
   ],

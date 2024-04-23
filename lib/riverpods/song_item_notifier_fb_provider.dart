@@ -39,6 +39,20 @@ class SongItemNotifierFb extends StateNotifier<List<SongItemModel?>> {
     state = data;
   }
 
+  List<SongItemModel> favChangeSongItem({
+    required String id,
+  }) {
+    state.map((element) {
+      (element!.id == id)
+          ? element.copyWith(
+              songFavorite: (element.songFavorite == 'true')
+                  ? element.songFavorite = 'false'
+                  : element.songFavorite = 'true')
+          : element;
+    }).toList();
+    return state.cast();
+  }
+
   void removeItem(int index) async {
     state.removeAt(index);
   }

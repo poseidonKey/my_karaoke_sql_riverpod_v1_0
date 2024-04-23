@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/models/song_item_model.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/song_item_notifier_fb_provider.dart';
-import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/song_item_notifier_provider.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/screens/song_edit_screen_fb.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/screens/song_view_screen.dart';
 
 class SongItemComponentFirebase extends ConsumerStatefulWidget {
   final SongItemModel item;
   final int index;
+
   const SongItemComponentFirebase(
       {super.key, required this.index, required this.item});
 
@@ -162,8 +162,18 @@ class _SongItemComponent1State
                   Icons.favorite_border_outlined,
                 ),
           onPressed: () async {
+            String str;
+            if (tg.songFavorite == 'true') {
+              str = 'false';
+            } else {
+              str = 'true';
+            }
+            await FirebaseFirestore.instance
+                .collection('songs')
+                .doc(tg.id)
+                .update({'songFavorite': str});
             ref
-                .read(songItemListNotifierProvider.notifier)
+                .read(songListFirebaseProvider.notifier)
                 .favChangeSongItem(id: widget.item.id!);
             setState(() {});
           },
