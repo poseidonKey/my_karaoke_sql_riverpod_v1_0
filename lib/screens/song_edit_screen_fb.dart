@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/layout/default_layout.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/models/song_item_model.dart';
+import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/song_category_notifier_fb_provider.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/song_item_notifier_fb_provider.dart';
 
 class SongEditScreenFirebase extends ConsumerStatefulWidget {
@@ -32,6 +33,12 @@ class _SongEditScreenFirebaseState
 
   @override
   Widget build(BuildContext context) {
+    final categories = ref.watch(songCategoryListNotifierFirebaseProvider);
+    List<String> cateList = [];
+
+    for (var element in categories) {
+      cateList.add(element.songJanreCategory);
+    }
     final bottomInset = MediaQuery.of(context).viewInsets.bottom;
     return DefaultLayout(
       title: '곡 편집',
@@ -121,7 +128,7 @@ class _SongEditScreenFirebaseState
                           width: 20,
                         ),
                         DropdownButton(
-                          items: ["팝", "발라드", "클래식", "트로트", "댄스"]
+                          items: cateList
                               .map((e) => DropdownMenuItem(
                                     value: e,
                                     child: Text("장르 : $e"),

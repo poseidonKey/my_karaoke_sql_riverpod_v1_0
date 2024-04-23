@@ -2,8 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/layout/default_layout.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/models/song_item_model.dart';
+import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/song_category_notifier_fb_provider.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/song_item_notifier_fb_provider.dart';
 
 class SongAddScreenFirebase extends ConsumerStatefulWidget {
@@ -18,10 +20,15 @@ class _SongAddScreenState extends ConsumerState<SongAddScreenFirebase> {
   AutovalidateMode autovalidateMode = AutovalidateMode.disabled;
   String? _songName, _songGYNumber, _songTJNumber, _songUtubeAddress, _songETC;
   final String _songFavorite = "false";
-  String _selJanre = "";
+  final String _selJanre = "";
   @override
   Widget build(BuildContext context) {
     // final bottomInset = MediaQuery.of(context).viewInsets.bottom;
+    final categories = ref.watch(songCategoryListNotifierFirebaseProvider);
+    List<String> cateList = [];
+    for (var element in categories) {
+      cateList.add(element.songJanreCategory);
+    }
     return DefaultLayout(
       title: '곡 추가',
       body: SingleChildScrollView(
@@ -105,15 +112,16 @@ class _SongAddScreenState extends ConsumerState<SongAddScreenFirebase> {
                         width: 20,
                       ),
                       DropdownButton(
-                        items: ["팝", "발라드", "클래식", "트로트", "댄스"]
+                        items: cateList
                             .map((e) => DropdownMenuItem(
                                   value: e,
                                   child: Text("장르 : $e"),
                                 ))
                             .toList(),
                         onChanged: (String? value) {
+                          print('touch');
                           setState(() {
-                            _selJanre = value ?? "";
+                            // _selJanre = value ?? "";
                           });
                         },
                         icon: const Icon(Icons.pin_drop),
@@ -150,30 +158,25 @@ class _SongAddScreenState extends ConsumerState<SongAddScreenFirebase> {
                     onSaved: (val) => _songETC = val ?? "",
                   ),
                 ),
-                // Padding(
-                //   padding: const EdgeInsets.symmetric(
-                //     horizontal: 30.0,
-                //     vertical: 5.0,
-                //   ),
-                //   child: TextFormField(
-                //     decoration: const InputDecoration(
-                //       border: OutlineInputBorder(),
-                //       filled: true,
-                //       labelText: '날짜',
-                //     ),
-                //     // readOnly: true,
-                //     enabled: false,
-                //     onSaved: (val) => _createTime =
-                //         "${DateTime.now().year}.${DateTime.now().month}.${DateTime.now().day}",
-                //   ),
-                // ),
                 const SizedBox(height: 20.0),
-                ElevatedButton(
-                  onPressed: () => submit("add"),
-                  child: const Text(
-                    'Add Song',
-                    style: TextStyle(fontSize: 20.0),
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () => submit("add"),
+                      child: const Text(
+                        'Add Song',
+                        style: TextStyle(fontSize: 20.0),
+                      ),
+                    ),
+                    ElevatedButton(
+                      onPressed: () => context.pop(),
+                      child: const Text(
+                        'Close',
+                        style: TextStyle(fontSize: 20.0),
+                      ),
+                    ),
+                  ],
                 ),
                 ElevatedButton(
                   onPressed: () async {

@@ -2,7 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/models/song_item_model.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/song_item_notifier_fb_provider.dart';
 
-final filterFirebaseProvider = StateProvider((ref) => Jenre.ALL);
+final filterFirebaseProvider = StateProvider<String>((ref) => '모든 곡');
 
 final filteredSongListFirebaseProvider = Provider<List<SongItemModel>>((ref) {
   final songListState = ref.watch(songListFirebaseProvider);
@@ -11,34 +11,57 @@ final filteredSongListFirebaseProvider = Provider<List<SongItemModel>>((ref) {
       ref.watch(sortOrderProvider); // New state variable for sort order
   List<SongItemModel> filteredList = [];
 
-  if (filterState == Jenre.ALL) {
+  // HomeScreenFirebase.categoryList.forEach((element) {
+  //   switch (element) {
+  //   case filterState==element.songJanreCategory:
+  //     print('Element is 1');
+  //     break;
+  //   case '2':
+  //     print('Element is 2');
+  //     break;
+  //   case '3':
+  //     print('Element is 3');
+  //     break;
+  //   default:
+  //     print('Unknown element');
+  // }
+  // });
+  if (filterState == '모든 곡') {
     filteredList = List.from(songListState.cast<SongItemModel>());
-  } else if (filterState == Jenre.TROT) {
+  } else {
     filteredList = songListState
         .cast<SongItemModel>()
-        .where((element) => element.songJanre == '트로트')
-        .toList();
-  } else if (filterState == Jenre.BALLADE) {
-    filteredList = songListState
-        .cast<SongItemModel>()
-        .where((element) => element.songJanre == '발라드')
-        .toList();
-  } else if (filterState == Jenre.CLASSIC) {
-    filteredList = songListState
-        .cast<SongItemModel>()
-        .where((element) => element.songJanre == '클래식')
-        .toList();
-  } else if (filterState == Jenre.DANCE) {
-    filteredList = songListState
-        .cast<SongItemModel>()
-        .where((element) => element.songJanre == '댄스')
-        .toList();
-  } else if (filterState == Jenre.POP) {
-    filteredList = songListState
-        .cast<SongItemModel>()
-        .where((element) => element.songJanre == '팝')
+        .where((element) => element.songJanre == filterState)
         .toList();
   }
+
+  // else if (filterState == '트로트') {
+  //   filteredList = songListState
+  //       .cast<SongItemModel>()
+  //       .where((element) => element.songJanre == '트로트')
+  //       .toList();
+  // } else if (filterState == '발라드') {
+  //   filteredList = songListState
+  //       .cast<SongItemModel>()
+  //       .where((element) => element.songJanre == '발라드')
+  //       .toList();
+  // }
+  // } else if (filterState == Jenre.CLASSIC) {
+  //   filteredList = songListState
+  //       .cast<SongItemModel>()
+  //       .where((element) => element.songJanre == '클래식')
+  //       .toList();
+  // } else if (filterState == Jenre.DANCE) {
+  //   filteredList = songListState
+  //       .cast<SongItemModel>()
+  //       .where((element) => element.songJanre == '댄스')
+  //       .toList();
+  // } else if (filterState == Jenre.POP) {
+  //   filteredList = songListState
+  //       .cast<SongItemModel>()
+  //       .where((element) => element.songJanre == '팝')
+  //       .toList();
+  // }
 
   // Sort the filtered list based on the song id and sortOrder
   if (sortOrder == SortOrder.ascending) {
@@ -55,8 +78,6 @@ enum SortOrder { ascending, descending }
 
 final sortOrderProvider =
     StateProvider<SortOrder>((ref) => SortOrder.ascending);
-
-
 
 // final filteredSongListFirebaseProvider = Provider<List<SongItemModel>>((ref) {
 //   final songListState = ref.watch(songListFirebaseProvider);

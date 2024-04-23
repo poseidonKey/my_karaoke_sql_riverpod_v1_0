@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class SongItemCategory {
   String? id;
   String songJanreCategory;
@@ -6,6 +8,12 @@ class SongItemCategory {
     this.id,
     this.songJanreCategory,
   );
+  factory SongItemCategory.fromSnapshot(DocumentSnapshot snapshot) {
+    return SongItemCategory(
+      snapshot['id'],
+      snapshot['songJanreCategory'],
+    );
+  }
 
   Map<String, dynamic> toMap() {
     return {

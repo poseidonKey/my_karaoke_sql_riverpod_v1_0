@@ -1,15 +1,17 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/databases/db_helper_category.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/models/song_item_category.dart';
+import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/song_category_notifier_fb_provider.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/song_category_notifier_provider.dart';
 
-class SongJanreCategoryScreen extends ConsumerWidget {
-  const SongJanreCategoryScreen({super.key});
+class SongJanreCategoryFirebaseScreen extends ConsumerWidget {
+  const SongJanreCategoryFirebaseScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(songCategoryListNotifierProvider);
+    final state = ref.watch(songCategoryListNotifierFirebaseProvider);
     TextEditingController controller = TextEditingController();
     return SafeArea(
       child: Scaffold(
@@ -31,7 +33,7 @@ class SongJanreCategoryScreen extends ConsumerWidget {
                             final tg = state.firstWhere(
                                 (element) => element.id == state[index].id);
                             if (direction == DismissDirection.startToEnd) {
-                              state.remove(tg);
+                              // state.remove(tg);
                               try {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
@@ -39,17 +41,15 @@ class SongJanreCategoryScreen extends ConsumerWidget {
                                         Text('${tg.songJanreCategory} Erase'),
                                   ),
                                 );
-                                DbHelperCategory helper = DbHelperCategory();
-                                await helper.openDbCategory();
-                                await helper.deleteList(tg);
+                                await FirebaseFirestore.instance
+                                    .collection('songCategoris')
+                                    .doc(state[index].id)
+                                    .delete();
                                 await ref
-                                    .read(songCategoryListNotifierProvider
-                                        .notifier)
-                                    .getDBDataRefresh();
-                                // ref
-                                //     .read(songCountProvider.notifier)
-                                //     .update((State) => state.length);
-                                // setState(() async {});
+                                    .read(
+                                        songCategoryListNotifierFirebaseProvider
+                                            .notifier)
+                                    .getDBDataFirebaseRefresh();
                               } catch (e) {
                                 print(e);
                               }
@@ -104,27 +104,35 @@ class SongJanreCategoryScreen extends ConsumerWidget {
                         ElevatedButton(
                           onPressed: () async {
                             print(controller.text);
-                            try {
-                              DbHelperCategory helper = DbHelperCategory();
-                              await helper.openDbCategory();
-                              final result = await helper.lastID();
-                              final idNum = int.parse(result[0].id!) + 1;
-                              // print(idNum);
+                            String? maxID = await getMaxID();
+                            if (maxID != null) {
+                              print('Max ID: $maxID');
+                              try {
+                                final result = maxID;
+                                final idNum = int.parse(result) + 1;
+                                // print(idNum);
 
-                              final sic = SongItemCategory(
-                                  idNum.toString(), controller.text);
-                              await helper.insertList(sic);
-                              await ref
-                                  .read(
-                                      songCategoryListNotifierProvider.notifier)
-                                  .getDBDataRefresh();
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content: Text(
-                                          'message : success Add category')));
-                              controller.text = '';
-                            } catch (e) {
-                              print('error : $e');
+                                final sic = SongItemCategory(
+                                    idNum.toString(), controller.text);
+                                FirebaseFirestore.instance
+                                    .collection('songCategoris')
+                                    .doc(idNum.toString())
+                                    .set(sic.toMap());
+                                await ref
+                                    .read(
+                                        songCategoryListNotifierFirebaseProvider
+                                            .notifier)
+                                    .getDBDataFirebaseRefresh();
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content: Text(
+                                            'message : success Add category')));
+                                controller.text = '';
+                              } catch (e) {
+                                print('error : $e');
+                              }
+                            } else {
+                              print('No documents found.');
                             }
                           },
                           style: ElevatedButton.styleFrom(
@@ -149,5 +157,31 @@ class SongJanreCategoryScreen extends ConsumerWidget {
               ),
       ),
     );
+  }
+
+  Future<String?> getMaxID() async {
+    try {
+      // Get a reference to the Firestore database
+      FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+      // Query the collection and order documents by ID in descending order
+      QuerySnapshot querySnapshot = await firestore
+          .collection('songCategoris')
+          .orderBy('id', descending: true)
+          .limit(1)
+          .get();
+
+      // Check if any documents were found
+      if (querySnapshot.size > 0) {
+        // Get the document data and return the value of the 'id' field
+        return querySnapshot.docs.first['id'];
+      } else {
+        // No documents found
+        return null;
+      }
+    } catch (error) {
+      print('Error getting max ID: $error');
+      return null;
+    }
   }
 }

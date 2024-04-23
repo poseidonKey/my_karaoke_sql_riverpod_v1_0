@@ -3,15 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/components/song_item_component_fb.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/const/const.dart';
+import 'package:my_karaoke_sql_riverpod_v1_0/models/song_item_category.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/filtered_song_list_fb_provider.dart';
-import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/filtered_song_list_provider.dart';
-import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/song_item_notifier_fb_provider.dart';
+import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/song_category_notifier_fb_provider.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/songs_count_fb_provider.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/screens/random_home_screen.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/screens/song_add_screen_fb.dart';
-import 'package:my_karaoke_sql_riverpod_v1_0/screens/song_janre_category_screen.dart';
-
-import '../models/song_item_model.dart';
+import 'package:my_karaoke_sql_riverpod_v1_0/screens/song_janre_category_fb_screen.dart';
 
 class HomeScreenFirebase extends ConsumerStatefulWidget {
   const HomeScreenFirebase({super.key});
@@ -23,6 +21,8 @@ class HomeScreenFirebase extends ConsumerStatefulWidget {
 class _HomeScreenFirebaseState extends ConsumerState<HomeScreenFirebase> {
   final ScrollController controller = ScrollController();
   final List<String> popupMenu = ['즐겨찾기 화면', '곡 찾기 화면', 'DB 관리'];
+  late List<SongItemCategory> categoryList;
+
   String janre = '모든 곡';
   bool isReversed = false;
 
@@ -30,6 +30,7 @@ class _HomeScreenFirebaseState extends ConsumerState<HomeScreenFirebase> {
   void initState() {
     super.initState();
     controller.addListener(scrollListener);
+    categoryList = ref.read(songCategoryListNotifierFirebaseProvider);
   }
 
   @override
@@ -50,6 +51,7 @@ class _HomeScreenFirebaseState extends ConsumerState<HomeScreenFirebase> {
   Widget build(BuildContext context) {
     final state = ref.watch(filteredSongListFirebaseProvider);
     final count = state.length;
+    categoryList = ref.watch(songCategoryListNotifierFirebaseProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -117,30 +119,18 @@ class _HomeScreenFirebaseState extends ConsumerState<HomeScreenFirebase> {
                       ref.read(sortOrderProvider.notifier).state =
                           SortOrder.descending;
                     }
-
-                    // state = data;
-                    // var source = ref.read(filteredSongListFirebaseProvider);
-                    // var source =
-                    //     List.from(ref.read(filteredSongListFirebaseProvider));
-
-                    // if (isReversed) {
-                    //   source.sort((a, b) =>
-                    //       (int.parse(a.id!)).compareTo(int.parse(b.id!)));
-                    // } else {
-                    //   source.sort((a, b) =>
-                    //       (int.parse(b.id!)).compareTo(int.parse(a.id!)));
-                    // }
-
-                    // ref.read(songListFirebaseProvider.notifier).state = source;
                     isReversed = !isReversed;
                   },
-                  icon: const Icon(Icons.flip),
+                  icon: const Icon(Icons.flip_camera_android),
                   iconSize: 30,
                   tooltip: '순서바꾸기',
                 ),
                 Container(
-                  width: MediaQuery.of(context).size.width * .7,
-                  decoration: const BoxDecoration(color: Colors.yellow),
+                  width: MediaQuery.of(context).size.width * .8,
+                  decoration: const BoxDecoration(
+                    color: Colors.yellow,
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                  ),
                   child: Align(
                     alignment: Alignment.centerRight,
                     child: Text(
@@ -194,12 +184,8 @@ class _HomeScreenFirebaseState extends ConsumerState<HomeScreenFirebase> {
                       itemBuilder: (context, index) {
                         return Padding(
                           padding: const EdgeInsets.symmetric(vertical: 8),
-                          child: state[index] == null
-                              ? const Center(
-                                  child: CircularProgressIndicator(),
-                                )
-                              : SongItemComponentFirebase(
-                                  index: index, item: state[index]),
+                          child: SongItemComponentFirebase(
+                              index: index, item: state[index]),
                         );
                       },
                     ),
@@ -211,16 +197,6 @@ class _HomeScreenFirebaseState extends ConsumerState<HomeScreenFirebase> {
         onPressed: () async {
           await Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => const SongAddScreenFirebase()));
-          // print(result);
-          // if (result == 'success') {
-          //   // await ref
-          //   //     .read(songItemListNotifierProvider.notifier)
-          //   //     .refreshSongsList();
-          //   // print(state.length);
-          //   // ref
-          //   //     .read(songCountProvider.notifier)
-          //   //     .update((State) => state.length + 1);
-          // }
         },
         child: const Icon(Icons.add),
       ),
@@ -242,108 +218,12 @@ class _HomeScreenFirebaseState extends ConsumerState<HomeScreenFirebase> {
               style: optionStyle,
             ),
           ),
-          ListTile(
-            title: const Text(
-              '모든 곡',
-              style: optionStyle1,
-            ),
-            onTap: () async {
-              Navigator.pop(context);
-              ref
-                  .read(filterFirebaseProvider.notifier)
-                  .update((state) => Jenre.ALL);
-              final songs = ref.read(filteredSongListProvider);
-              ref.read(songCountFirebaseProvider.notifier).update(
-                    (state) => songs.length,
-                  );
-              janre = '모든 곡';
-            },
-          ),
-          ListTile(
-            title: const Text(
-              '발라드',
-              style: optionStyle1,
-            ),
-            onTap: () async {
-              Navigator.pop(context);
-              ref
-                  .read(filterFirebaseProvider.notifier)
-                  .update((state) => Jenre.BALLADE);
-              final songs = ref.read(filteredSongListFirebaseProvider);
-              ref.read(songCountFirebaseProvider.notifier).update(
-                    (state) => songs.length,
-                  );
-              janre = '발라드';
-            },
-          ),
-          ListTile(
-            title: const Text(
-              '트로트',
-              style: optionStyle1,
-            ),
-            onTap: () async {
-              Navigator.pop(context);
-              ref
-                  .read(filterFirebaseProvider.notifier)
-                  .update((state) => Jenre.TROT);
-              final songs = ref.read(filteredSongListFirebaseProvider);
-              ref.read(songCountFirebaseProvider.notifier).update(
-                    (state) => songs.length,
-                  );
-              janre = '트로트';
-            },
-          ),
-          ListTile(
-            title: const Text(
-              '팝',
-              style: optionStyle1,
-            ),
-            onTap: () async {
-              Navigator.pop(context);
-              ref
-                  .read(filterFirebaseProvider.notifier)
-                  .update((state) => Jenre.POP);
-              final songs = ref.read(filteredSongListFirebaseProvider);
-              ref.read(songCountFirebaseProvider.notifier).update(
-                    (state) => songs.length,
-                  );
-              janre = '팝송';
-            },
-          ),
-          ListTile(
-            title: const Text(
-              '댄스',
-              style: optionStyle1,
-            ),
-            onTap: () async {
-              Navigator.pop(context);
-              ref
-                  .read(filterFirebaseProvider.notifier)
-                  .update((state) => Jenre.DANCE);
-              final songs = ref.read(filteredSongListFirebaseProvider);
-              ref.read(songCountFirebaseProvider.notifier).update(
-                    (state) => songs.length,
-                  );
-              janre = '댄스';
-            },
-          ),
-          ListTile(
-            title: const Text(
-              '클래식',
-              style: optionStyle1,
-            ),
-            onTap: () async {
-              Navigator.pop(context);
-              ref
-                  .read(filterFirebaseProvider.notifier)
-                  .update((state) => Jenre.CLASSIC);
-              final songs = ref.read(filteredSongListFirebaseProvider);
-              ref.read(songCountFirebaseProvider.notifier).update(
-                    (state) => songs.length,
-                  );
-              janre = '클래식';
-            },
-          ),
+          categoryMenu(janreName: '모든 곡'),
+          ...categoryList
+              .map(
+                (e) => categoryMenu(janreName: e.songJanreCategory),
+              )
+              .toList(),
           SizedBox(
             height: 30,
             child: Container(
@@ -371,7 +251,7 @@ class _HomeScreenFirebaseState extends ConsumerState<HomeScreenFirebase> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const SongJanreCategoryScreen(),
+                  builder: (context) => const SongJanreCategoryFirebaseScreen(),
                 ),
               );
             },
@@ -417,6 +297,24 @@ class _HomeScreenFirebaseState extends ConsumerState<HomeScreenFirebase> {
               child: const Text('fb make Data'))
         ],
       ),
+    );
+  }
+
+  ListTile categoryMenu({required String janreName}) {
+    return ListTile(
+      title: Text(
+        janreName,
+        style: optionStyle1,
+      ),
+      onTap: () async {
+        Navigator.pop(context);
+        ref.read(filterFirebaseProvider.notifier).update((state) => janreName);
+        final songs = ref.read(filteredSongListFirebaseProvider);
+        ref.read(songCountFirebaseProvider.notifier).update(
+              (state) => songs.length,
+            );
+        janre = janreName;
+      },
     );
   }
 }
