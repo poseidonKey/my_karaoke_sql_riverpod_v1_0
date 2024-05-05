@@ -25,6 +25,7 @@ class _HomeScreenFirebaseState extends ConsumerState<HomeScreenFirebase> {
   final List<String> popupMenu = ['즐겨찾기 화면', '곡 찾기 화면', 'DB 관리'];
   late List<SongItemCategory> categoryList;
   bool isAlert = true;
+  int sub = 0;
 
   String janre = '모든 곡';
   bool isReversed = false;
@@ -68,42 +69,50 @@ class _HomeScreenFirebaseState extends ConsumerState<HomeScreenFirebase> {
   Widget build(BuildContext context) {
     final state = ref.watch(filteredSongListFirebaseProvider);
     final count = state.length;
+    if (SongCount.songsCountSQL != 0 && isAlert) {
+      sub = (SongCount.songsCountFB - SongCount.songsCountSQL).abs();
+    }
 
     // log(SongCount.songsCountFB.toString());
     // log('sql');
     // log(SongCount.songsCountSQL.toString());
 
-    if (SongCount.songsCountSQL != 0 && isAlert) {
-      final sub = (SongCount.songsCountFB - SongCount.songsCountSQL).abs();
-      if (SongCount.songsCountFB > SongCount.songsCountSQL) {
-        // showDialog(
-        //     context: context,
-        //     builder: (context) {
-        //       return AlertDialog(
-        //         title: const Text('UPdate 확인'),
-        //         content: Text('서버의 데이터가 로컬 데이타 보다 $sub 만큼 많습니다.'),
-        //         actions: [
-        //           ElevatedButton(
-        //               onPressed: () {
-        //                 Navigator.of(context).pop();
-        //               },
-        //               child: const Text('Cancel')),
-        //           ElevatedButton(
-        //               onPressed: () {
-        //                 Navigator.of(context).pop();
-        //               },
-        //               child: const Text('update')),
-        //         ],
-        //       );
-        //     });
-        print('fb  $sub big');
-      } else if (SongCount.songsCountFB < SongCount.songsCountSQL) {
-        print('sql $sub big');
-      } else {
-        print('==');
-      }
-      isAlert = false;
-    }
+    // if (SongCount.songsCountSQL != 0 && isAlert) {
+    //   final sub = (SongCount.songsCountFB - SongCount.songsCountSQL).abs();
+    //   if (SongCount.songsCountFB > SongCount.songsCountSQL) {
+    //     // showDialog(
+    //     //     context: context,
+    //     //     builder: (context) {
+    //     //       return AlertDialog(
+    //     //         title: const Text('UPdate 확인'),
+    //     //         content: Text('서버의 데이터가 로컬 데이타 보다 $sub 만큼 많습니다.'),
+    //     //         actions: [
+    //     //           ElevatedButton(
+    //     //               onPressed: () {
+    //     //                 Navigator.of(context).pop();
+    //     //               },
+    //     //               child: const Text('Cancel')),
+    //     //           ElevatedButton(
+    //     //               onPressed: () {
+    //     //                 Navigator.of(context).pop();
+    //     //               },
+    //     //               child: const Text('update')),
+    //     //         ],
+    //     //       );
+    //     //     });
+    //     showBottomSheet(
+    //         context: context,
+    //         builder: (context) {
+    //           return Container();
+    //         });
+    //     print('fb  $sub big');
+    //   } else if (SongCount.songsCountFB < SongCount.songsCountSQL) {
+    //     print('sql $sub big');
+    //   } else {
+    //     print('==');
+    //   }
+    //   isAlert = false;
+    // }
 
     categoryList = ref.watch(songCategoryListNotifierFirebaseProvider);
 
@@ -144,108 +153,128 @@ class _HomeScreenFirebaseState extends ConsumerState<HomeScreenFirebase> {
       ),
       drawer: _drawer(context, ref),
       body: SafeArea(
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                // FilledButton(
-                //     onPressed: () {
-                //       final data = ref.read(songListFirebaseProvider);
-                //       final result = data
-                //           .where((element) =>
-                //               element?.songName.contains('w') ?? false)
-                //           .toList();
-                //       for (var element in result) {
-                //         print(element?.songName);
-                //       }
-                //     },
-                //     child: const Text('test')),
-                IconButton(
-                  onPressed: () {
-                    // Toggle the sort order between ascending and descending
-                    // final sortOrder = ref.read(sortOrderProvider);
-                    if (isReversed) {
-                      ref.read(sortOrderProvider.notifier).state =
-                          SortOrder.ascending;
-                    } else {
-                      ref.read(sortOrderProvider.notifier).state =
-                          SortOrder.descending;
-                    }
-                    isReversed = !isReversed;
-                  },
-                  icon: const Icon(Icons.flip_camera_android),
-                  iconSize: 30,
-                  tooltip: '순서바꾸기',
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width * .8,
-                  decoration: const BoxDecoration(
-                    color: Colors.yellow,
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                  ),
-                  child: Align(
-                    alignment: Alignment.centerRight,
-                    child: Text(
-                      '총 곡수: $count 곡, 장르 : $janre',
-                      style: const TextStyle(
-                          color: Colors.deepPurple,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            // Padding(
-            //   padding: const EdgeInsets.only(top: 8),
-            //   child: SizedBox(
-            //     width: double.infinity,
-            //     height: 2,
-            //     child: Center(
-            //       child: Container(
-            //         decoration: const BoxDecoration(
-            //           color: Color.fromARGB(255, 168, 74, 67),
-            //         ),
-            //       ),
-            //     ),
-            //   ),
-            // ),
-            const SizedBox(
-              width: 20,
-            ),
-            Expanded(
-              child: state.isEmpty
-                  ? const Center(
-                      child: Text('현재 등록 된 곡이 없습니다.\n관리할 곡을 추가하세요.'),
-                    )
-                  : ListView.separated(
-                      itemCount: state.length,
-                      separatorBuilder: (BuildContext context, int index) =>
-                          SizedBox(
-                        height: 3,
-                        child: Container(
-                          decoration: const BoxDecoration(
-                            gradient: LinearGradient(
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              colors: [Colors.blue, Colors.green],
-                            ),
+        child: (SongCount.songsCountSQL != 0 && isAlert)
+            ? AlertDialog(
+                title: const Text('UPdate 확인'),
+                content: Text('서버의 데이터가 로컬 데이타 보다 $sub 만큼 많습니다.'),
+                actions: [
+                  ElevatedButton(
+                      onPressed: () {
+                        isAlert = false;
+                        setState(() {});
+                      },
+                      child: const Text('Cancel')),
+                  ElevatedButton(
+                      onPressed: () {
+                        isAlert = false;
+                        setState(() {});
+                      },
+                      child: const Text('update')),
+                ],
+              )
+            : Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      // FilledButton(
+                      //     onPressed: () {
+                      //       final data = ref.read(songListFirebaseProvider);
+                      //       final result = data
+                      //           .where((element) =>
+                      //               element?.songName.contains('w') ?? false)
+                      //           .toList();
+                      //       for (var element in result) {
+                      //         print(element?.songName);
+                      //       }
+                      //     },
+                      //     child: const Text('test')),
+                      IconButton(
+                        onPressed: () {
+                          // Toggle the sort order between ascending and descending
+                          // final sortOrder = ref.read(sortOrderProvider);
+                          if (isReversed) {
+                            ref.read(sortOrderProvider.notifier).state =
+                                SortOrder.ascending;
+                          } else {
+                            ref.read(sortOrderProvider.notifier).state =
+                                SortOrder.descending;
+                          }
+                          isReversed = !isReversed;
+                        },
+                        icon: const Icon(Icons.flip_camera_android),
+                        iconSize: 30,
+                        tooltip: '순서바꾸기',
+                      ),
+                      Container(
+                        width: MediaQuery.of(context).size.width * .8,
+                        decoration: const BoxDecoration(
+                          color: Colors.yellow,
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                        ),
+                        child: Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            '총 곡수: $count 곡, 장르 : $janre',
+                            style: const TextStyle(
+                                color: Colors.deepPurple,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20),
                           ),
                         ),
                       ),
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8),
-                          child: SongItemComponentFirebase(
-                              index: index, item: state[index]),
-                        );
-                      },
-                    ),
-            )
-          ],
-        ),
+                    ],
+                  ),
+                  // Padding(
+                  //   padding: const EdgeInsets.only(top: 8),
+                  //   child: SizedBox(
+                  //     width: double.infinity,
+                  //     height: 2,
+                  //     child: Center(
+                  //       child: Container(
+                  //         decoration: const BoxDecoration(
+                  //           color: Color.fromARGB(255, 168, 74, 67),
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
+                  const SizedBox(
+                    width: 20,
+                  ),
+                  Expanded(
+                    child: state.isEmpty
+                        ? const Center(
+                            child: Text('현재 등록 된 곡이 없습니다.\n관리할 곡을 추가하세요.'),
+                          )
+                        : ListView.separated(
+                            itemCount: state.length,
+                            separatorBuilder:
+                                (BuildContext context, int index) => SizedBox(
+                              height: 3,
+                              child: Container(
+                                decoration: const BoxDecoration(
+                                  gradient: LinearGradient(
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                    colors: [Colors.blue, Colors.green],
+                                  ),
+                                ),
+                              ),
+                            ),
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 8),
+                                child: SongItemComponentFirebase(
+                                    index: index, item: state[index]),
+                              );
+                            },
+                          ),
+                  )
+                ],
+              ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
