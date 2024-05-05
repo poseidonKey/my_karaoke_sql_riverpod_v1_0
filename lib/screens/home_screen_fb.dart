@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/components/song_item_component_fb.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/const/const.dart';
+import 'package:my_karaoke_sql_riverpod_v1_0/const/song_count.dart';
+import 'package:my_karaoke_sql_riverpod_v1_0/databases/db_helper.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/models/song_item_category.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/filtered_song_list_fb_provider.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/song_category_notifier_fb_provider.dart';
@@ -22,6 +24,7 @@ class _HomeScreenFirebaseState extends ConsumerState<HomeScreenFirebase> {
   final ScrollController controller = ScrollController();
   final List<String> popupMenu = ['즐겨찾기 화면', '곡 찾기 화면', 'DB 관리'];
   late List<SongItemCategory> categoryList;
+  bool isAlert = true;
 
   String janre = '모든 곡';
   bool isReversed = false;
@@ -31,6 +34,20 @@ class _HomeScreenFirebaseState extends ConsumerState<HomeScreenFirebase> {
     super.initState();
     controller.addListener(scrollListener);
     categoryList = ref.read(songCategoryListNotifierFirebaseProvider);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    songAlert();
+  }
+
+  void songAlert() async {
+    DbHelper helper = DbHelper();
+
+    await helper.openDb();
+    await helper.getDataAllLists();
+    setState(() {});
   }
 
   @override
@@ -51,6 +68,43 @@ class _HomeScreenFirebaseState extends ConsumerState<HomeScreenFirebase> {
   Widget build(BuildContext context) {
     final state = ref.watch(filteredSongListFirebaseProvider);
     final count = state.length;
+
+    // log(SongCount.songsCountFB.toString());
+    // log('sql');
+    // log(SongCount.songsCountSQL.toString());
+
+    if (SongCount.songsCountSQL != 0 && isAlert) {
+      final sub = (SongCount.songsCountFB - SongCount.songsCountSQL).abs();
+      if (SongCount.songsCountFB > SongCount.songsCountSQL) {
+        // showDialog(
+        //     context: context,
+        //     builder: (context) {
+        //       return AlertDialog(
+        //         title: const Text('UPdate 확인'),
+        //         content: Text('서버의 데이터가 로컬 데이타 보다 $sub 만큼 많습니다.'),
+        //         actions: [
+        //           ElevatedButton(
+        //               onPressed: () {
+        //                 Navigator.of(context).pop();
+        //               },
+        //               child: const Text('Cancel')),
+        //           ElevatedButton(
+        //               onPressed: () {
+        //                 Navigator.of(context).pop();
+        //               },
+        //               child: const Text('update')),
+        //         ],
+        //       );
+        //     });
+        print('fb  $sub big');
+      } else if (SongCount.songsCountFB < SongCount.songsCountSQL) {
+        print('sql $sub big');
+      } else {
+        print('==');
+      }
+      isAlert = false;
+    }
+
     categoryList = ref.watch(songCategoryListNotifierFirebaseProvider);
 
     return Scaffold(
@@ -218,10 +272,11 @@ class _HomeScreenFirebaseState extends ConsumerState<HomeScreenFirebase> {
               style: optionStyle,
             ),
           ),
-          categoryMenu(janreName: '모든 곡'),
+          categoryMenu(context: context, janreName: '모든 곡'),
           ...categoryList
               .map(
-                (e) => categoryMenu(janreName: e.songJanreCategory),
+                (e) => categoryMenu(
+                    context: context, janreName: e.songJanreCategory),
               )
               .toList(),
           SizedBox(
@@ -300,14 +355,15 @@ class _HomeScreenFirebaseState extends ConsumerState<HomeScreenFirebase> {
     );
   }
 
-  ListTile categoryMenu({required String janreName}) {
+  ListTile categoryMenu(
+      {required BuildContext context, required String janreName}) {
     return ListTile(
       title: Text(
         janreName,
         style: optionStyle1,
       ),
       onTap: () async {
-        Navigator.pop(context);
+        Navigator.of(context).pop();
         ref.read(filterFirebaseProvider.notifier).update((state) => janreName);
         final songs = ref.read(filteredSongListFirebaseProvider);
         ref.read(songCountFirebaseProvider.notifier).update(

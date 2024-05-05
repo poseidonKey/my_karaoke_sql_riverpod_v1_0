@@ -1,12 +1,13 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:my_karaoke_sql_riverpod_v1_0/const/song_count.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/databases/db_helper.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/models/song_item_model.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/songs_count_provider.dart';
 
 final songItemListNotifierProvider =
-    StateNotifierProvider<SongItemNotifier, List<SongItemModel>>(
-  (ref) => SongItemNotifier(),
-);
+    StateNotifierProvider<SongItemNotifier, List<SongItemModel>>((ref) {
+  return SongItemNotifier();
+});
 
 class SongItemNotifier extends StateNotifier<List<SongItemModel>> {
   SongItemNotifier() : super([]) {
@@ -27,6 +28,7 @@ class SongItemNotifier extends StateNotifier<List<SongItemModel>> {
     } else {
       songList = songList;
     }
+    SongCount.songsCountFB = songList.length;
 
     return songList;
   }

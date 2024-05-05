@@ -1,16 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:my_karaoke_sql_riverpod_v1_0/const/song_count.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/models/song_item_model.dart';
 
 final songListFirebaseProvider =
-    StateNotifierProvider<SongItemNotifierFb, List<SongItemModel?>>(
-  (ref) => SongItemNotifierFb(),
-);
+    StateNotifierProvider<SongItemNotifierFb, List<SongItemModel?>>((ref) {
+  return SongItemNotifierFb();
+});
 
 class SongItemNotifierFb extends StateNotifier<List<SongItemModel?>> {
   SongItemNotifierFb() : super([]) {
     final tmp = fetchSongDataAndSortByNo();
-    tmp.then((value) => state = value);
+    tmp.then((value) {
+      state = value;
+    });
   }
 
   Future<List<SongItemModel?>> fetchSongDataAndSortByNo() async {
@@ -23,6 +26,8 @@ class SongItemNotifierFb extends StateNotifier<List<SongItemModel?>> {
         .toList();
     // data.sort((a, b) => (a.id!).compareTo(b.id!));
     data.sort((a, b) => (int.parse(a.id!)).compareTo(int.parse(b.id!)));
+    SongCount.songsCountFB = data.length;
+
     return data;
   }
 

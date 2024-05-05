@@ -1,3 +1,4 @@
+import 'package:my_karaoke_sql_riverpod_v1_0/const/song_count.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/models/song_item_model.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -28,6 +29,7 @@ class DbHelper {
     if (maps.isEmpty) {
       return [];
     }
+    SongCount.songsCountSQL = maps.length;
 
     return List.generate(maps.length, (i) {
       return SongItemModel(
