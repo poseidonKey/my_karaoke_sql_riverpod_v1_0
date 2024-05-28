@@ -4,8 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/layout/default_layout.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/models/song_item_model.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/song_item_notifier_fb_provider.dart';
-import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/song_item_notifier_provider.dart';
-import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/song_search_notifier_provider.dart';
+import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/song_search_notifier_fb_provider.dart';
 
 class SongSearchScreenFirebase extends ConsumerWidget {
   TextEditingController controller = TextEditingController();
@@ -14,7 +13,7 @@ class SongSearchScreenFirebase extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(songSearchNotifierProvider);
+    final state = ref.watch(songSearchNotifierFBProvider);
     return DefaultLayout(
       title: '곡 찾기',
       body: Padding(
@@ -54,7 +53,7 @@ class SongSearchScreenFirebase extends ConsumerWidget {
                             false)
                         .toList();
                     songList = result.cast<SongItemModel>();
-                    ref.read(songSearchNotifierProvider.notifier).state =
+                    ref.read(songSearchNotifierFBProvider.notifier).state =
                         songList;
                   },
                   child: const Text('등록 된 곡 중 찾기'),
