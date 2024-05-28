@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:my_karaoke_sql_riverpod_v1_0/databases/db_helper_category.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/models/song_item_category.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/song_category_notifier_fb_provider.dart';
-import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/song_category_notifier_provider.dart';
+import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/uid_fb.dart';
+import 'package:my_karaoke_sql_riverpod_v1_0/util/firebase_service.dart';
 
 class SongJanreCategoryFirebaseScreen extends ConsumerWidget {
   const SongJanreCategoryFirebaseScreen({super.key});
@@ -41,7 +41,9 @@ class SongJanreCategoryFirebaseScreen extends ConsumerWidget {
                                         Text('${tg.songJanreCategory} Erase'),
                                   ),
                                 );
-                                await FirebaseFirestore.instance
+                                final uid = ref.read(uidProvider);
+                                await MyFirebaseService.instance
+                                    .doc(uid)
                                     .collection('songCategoris')
                                     .doc(state[index].id)
                                     .delete();
@@ -114,7 +116,9 @@ class SongJanreCategoryFirebaseScreen extends ConsumerWidget {
 
                                 final sic = SongItemCategory(
                                     idNum.toString(), controller.text);
-                                FirebaseFirestore.instance
+                                final uid = ref.read(uidProvider);
+                                await MyFirebaseService.instance
+                                    .doc(uid)
                                     .collection('songCategoris')
                                     .doc(idNum.toString())
                                     .set(sic.toMap());

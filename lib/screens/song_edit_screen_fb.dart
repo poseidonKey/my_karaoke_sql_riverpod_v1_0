@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -6,6 +5,8 @@ import 'package:my_karaoke_sql_riverpod_v1_0/layout/default_layout.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/models/song_item_model.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/song_category_notifier_fb_provider.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/song_item_notifier_fb_provider.dart';
+import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/uid_fb.dart';
+import 'package:my_karaoke_sql_riverpod_v1_0/util/firebase_service.dart';
 
 class SongEditScreenFirebase extends ConsumerStatefulWidget {
   final SongItemModel songItem;
@@ -211,7 +212,9 @@ class _SongEditScreenFirebaseState
           "${DateTime.now().year}.${DateTime.now().month}.${DateTime.now().day}",
           _songFavorite);
       final item = newEventDetail.toMap();
-      FirebaseFirestore.instance
+      final uid = ref.read(uidProvider);
+      MyFirebaseService.instance
+          .doc(uid)
           .collection('songs')
           .doc(widget.songItem.id)
           .update(item);

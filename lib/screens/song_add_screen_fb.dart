@@ -7,6 +7,8 @@ import 'package:my_karaoke_sql_riverpod_v1_0/layout/default_layout.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/models/song_item_model.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/song_category_notifier_fb_provider.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/song_item_notifier_fb_provider.dart';
+import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/uid_fb.dart';
+import 'package:my_karaoke_sql_riverpod_v1_0/util/firebase_service.dart';
 
 class SongAddScreenFirebase extends ConsumerStatefulWidget {
   const SongAddScreenFirebase({super.key});
@@ -237,10 +239,16 @@ class _SongAddScreenState extends ConsumerState<SongAddScreenFirebase> {
           "${DateTime.now().year}.${DateTime.now().month}.${DateTime.now().day}",
           _songFavorite);
       final newSongJson = newSong.toMap();
-      FirebaseFirestore.instance
+
+      // final SharedPreferences prefs = await SharedPreferences.getInstance();
+      // final uid = prefs.getString('UID');
+      final uid = ref.read(uidProvider);
+      MyFirebaseService.instance
+          .doc(uid)
           .collection('songs')
           .doc(id.toString())
           .set(newSongJson);
+
       await ref
           .read(songListFirebaseProvider.notifier)
           .refreshSongDataAndSortByNo();
@@ -259,8 +267,15 @@ class _SongAddScreenState extends ConsumerState<SongAddScreenFirebase> {
       String collectionName) async {
     FirebaseFirestore firestore = FirebaseFirestore.instance;
 
+    final uid = ref.read(uidProvider);
+    // print(uid);
+
     // Query all documents in the collection
-    QuerySnapshot snapshot = await firestore.collection(collectionName).get();
+    QuerySnapshot snapshot = await firestore
+        .collection('allSongs')
+        .doc(uid)
+        .collection(collectionName)
+        .get();
 
     // Initialize variables to keep track of the highest ID and the corresponding document
     int? maxId;

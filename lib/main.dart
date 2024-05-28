@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/firebase_options.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/route/router.dart';
+import 'package:my_karaoke_sql_riverpod_v1_0/route/router_auth.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/route/router_use_wifi.dart';
 
 void main() async {
@@ -21,7 +22,24 @@ void main() async {
     app = const MyAppWithoutRouter();
   }
 
-  runApp(app);
+  // runApp(app);
+  runApp(
+    const MyAppAuthScreen(),
+  );
+}
+
+class MyAppAuthScreen extends StatelessWidget {
+  const MyAppAuthScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ProviderScope(
+      child: MaterialApp.router(
+        debugShowCheckedModeBanner: false,
+        routerConfig: routerAuth,
+      ),
+    );
+  }
 }
 
 class MyAppWithRouter extends StatelessWidget {

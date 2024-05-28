@@ -9,9 +9,11 @@ import 'package:my_karaoke_sql_riverpod_v1_0/models/song_item_category.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/filtered_song_list_fb_provider.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/song_category_notifier_fb_provider.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/songs_count_fb_provider.dart';
+import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/uid_fb.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/screens/random_home_screen.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/screens/song_add_screen_fb.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/screens/song_janre_category_fb_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreenFirebase extends ConsumerStatefulWidget {
   const HomeScreenFirebase({super.key});
@@ -278,8 +280,11 @@ class _HomeScreenFirebaseState extends ConsumerState<HomeScreenFirebase> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          await Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => const SongAddScreenFirebase()));
+          await Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => const SongAddScreenFirebase(),
+            ),
+          );
         },
         child: const Icon(Icons.add),
       ),
@@ -364,6 +369,25 @@ class _HomeScreenFirebaseState extends ConsumerState<HomeScreenFirebase> {
                 ),
               );
             },
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.black,
+              ),
+              onPressed: () async {
+                final SharedPreferences prefs =
+                    await SharedPreferences.getInstance();
+                await prefs.remove('userId');
+                ref.read(uidProvider.notifier).state = '';
+                context.go('/');
+              },
+              child: const Text(
+                'Logout',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
           ),
           ElevatedButton(
               onPressed: () async {
