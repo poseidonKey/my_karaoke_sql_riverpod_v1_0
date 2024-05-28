@@ -10,6 +10,7 @@ import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/filtered_song_list_fb_pro
 import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/song_category_notifier_fb_provider.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/songs_count_fb_provider.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/uid_fb.dart';
+import 'package:my_karaoke_sql_riverpod_v1_0/screens/auth_screen.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/screens/random_home_screen.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/screens/song_add_screen_fb.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/screens/song_janre_category_fb_screen.dart';
@@ -37,6 +38,17 @@ class _HomeScreenFirebaseState extends ConsumerState<HomeScreenFirebase> {
     super.initState();
     controller.addListener(scrollListener);
     categoryList = ref.read(songCategoryListNotifierFirebaseProvider);
+    addUID();
+  }
+
+  void addUID() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final uid = prefs.getString('UID');
+    if (uid != null) {
+      ref.read(uidProvider.notifier).state = uid;
+    } else {
+      return;
+    }
   }
 
   @override
@@ -380,8 +392,11 @@ class _HomeScreenFirebaseState extends ConsumerState<HomeScreenFirebase> {
                 final SharedPreferences prefs =
                     await SharedPreferences.getInstance();
                 await prefs.remove('userId');
+                await prefs.remove('password');
+                await prefs.remove('UID');
                 ref.read(uidProvider.notifier).state = '';
                 context.go('/');
+                Navigator.of(context).pop();
               },
               child: const Text(
                 'Logout',

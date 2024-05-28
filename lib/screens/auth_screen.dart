@@ -46,180 +46,186 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // final provider = context.watch<ScheduleProvider>();
-
-    return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 32.0),
-        child: Form(
-          key: formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Align(
-                alignment: Alignment.center,
-                child: CircleAvatar(
-                  radius: 100,
-                  child: Image.asset(
-                    'assets/img/logo.png',
-                    width: MediaQuery.of(context).size.width * 0.3,
+    return SafeArea(
+      top: true,
+      bottom: false,
+      child: Scaffold(
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 32.0),
+          child: Form(
+            key: formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Align(
+                  alignment: Alignment.center,
+                  child: CircleAvatar(
+                    radius: 100,
+                    child: Image.asset(
+                      'assets/img/logo.png',
+                      width: MediaQuery.of(context).size.width * 0.3,
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 16.0),
-              LoginTextField(
-                controller: emailControler,
-                focusNode: _emailFocusNode,
-                onSaved: (val) {
-                  email = val!;
-                },
-                validator: (val) {
-                  if (val?.isEmpty ?? true) {
-                    return '이메일을 입력해주세요.';
-                  }
-
-                  RegExp reg = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-
-                  if (!reg.hasMatch(val!)) {
-                    return '이메일 형식이 올바르지 않습니다.';
-                  }
-                  return null;
-                },
-                hintText: '이메일',
-              ),
-              const SizedBox(height: 8.0),
-              LoginTextField(
-                focusNode: _passwordFocusNode,
-                controller: passwordControler,
-                onSaved: (val) {
-                  password = val!;
-                },
-                obscureText: true,
-                validator: (val) {
-                  if (val?.isEmpty ?? true) {
-                    return '비밀번호를 입력해주세요.';
-                  }
-
-                  if (val!.length < 4 || val.length > 8) {
-                    return '비밀번호는 4~8자 사이로 입력 해주세요!';
-                  }
-                  return null;
-                },
-                hintText: '비밀번호',
-              ),
-              const SizedBox(height: 16.0),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: SECONDARY_COLOR,
-                ),
-                onPressed: () {
-                  if (saveAndValidateForm()) {
-                    _register();
-                  } else {
-                    print('error occure');
-                  }
-                },
-                child: const Text(
-                  '회원가입',
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
-              const SizedBox(
-                height: 16,
-              ),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: SECONDARY_COLOR,
-                ),
-                onPressed: () async {
-                  // email=formKey.
-                  final SharedPreferences prefs =
-                      await SharedPreferences.getInstance();
-                  if (saveAndValidateForm()) {
-                    // Obtain shared preferences.
-                    // final userPasswd = prefs.get('userPasswd');
-
-                    await prefs.setString('userId', email);
-                    final uid = await signIn();
-                    if (uid != null) {
-                      await prefs.setString('UID', uid);
-                      ref.read(uidProvider.notifier).state = uid;
+                const SizedBox(height: 16.0),
+                LoginTextField(
+                  controller: emailControler,
+                  focusNode: _emailFocusNode,
+                  onSaved: (val) {
+                    email = val!;
+                  },
+                  validator: (val) {
+                    if (val?.isEmpty ?? true) {
+                      return '이메일을 입력해주세요.';
                     }
-                    context.go('/home_fb');
-                  } else {
-                    print('error occure');
-                  }
-                },
-                child: const Text(
-                  '로그인',
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
-              const SizedBox(
-                height: 30,
-              ),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.black,
-                ),
-                onPressed: () async {
-                  context.go('/home');
-                },
-                child: const Text(
-                  '내장 SQL 이용',
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.black,
-                ),
-                onPressed: () async {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const SqlTest(),
-                    ),
-                  );
-                },
-                child: const Text(
-                  'SQL Test',
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.black,
-                ),
-                onPressed: () async {
-                  // email=formKey.
-                  final SharedPreferences prefs =
-                      await SharedPreferences.getInstance();
-                  if (saveAndValidateForm()) {
-                    // Obtain shared preferences.
-                    // final userPasswd = prefs.get('userPasswd');
 
-                    await prefs.setString('userId', email);
-                    final uid = await signIn();
-                    if (uid != null) {
-                      await prefs.setString('UID', uid);
-                      ref.read(uidProvider.notifier).state = uid;
+                    RegExp reg = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+
+                    if (!reg.hasMatch(val!)) {
+                      return '이메일 형식이 올바르지 않습니다.';
                     }
-                    context.go('/home_fb');
-                  } else {
-                    print('error occure');
-                  }
-                },
-                child: const Text(
-                  'firebase 이용',
-                  style: TextStyle(color: Colors.white),
+                    return null;
+                  },
+                  hintText: '이메일',
                 ),
-              ),
-              FilledButton(
-                onPressed: _moveData,
-                child: const Text('FB 데이터 옮기기'),
-              )
-            ],
+                const SizedBox(height: 8.0),
+                LoginTextField(
+                  focusNode: _passwordFocusNode,
+                  controller: passwordControler,
+                  onSaved: (val) {
+                    password = val!;
+                  },
+                  obscureText: true,
+                  validator: (val) {
+                    if (val?.isEmpty ?? true) {
+                      return '비밀번호를 입력해주세요.';
+                    }
+
+                    if (val!.length < 4 || val.length > 8) {
+                      return '비밀번호는 4~8자 사이로 입력 해주세요!';
+                    }
+                    return null;
+                  },
+                  hintText: '비밀번호',
+                ),
+                const SizedBox(height: 16.0),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: SECONDARY_COLOR,
+                  ),
+                  onPressed: () {
+                    if (saveAndValidateForm()) {
+                      _register();
+                    } else {
+                      print('error occure');
+                    }
+                  },
+                  child: const Text(
+                    '회원가입',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+                const SizedBox(
+                  height: 16,
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: SECONDARY_COLOR,
+                  ),
+                  onPressed: () async {
+                    // email=formKey.
+                    final SharedPreferences prefs =
+                        await SharedPreferences.getInstance();
+                    if (saveAndValidateForm()) {
+                      // Obtain shared preferences.
+                      // final userPasswd = prefs.get('userPasswd');
+
+                      final uid = await signIn();
+                      if (uid != null) {
+                        await prefs.setString('userId', email);
+                        await prefs.setString('passwd', password);
+                        await prefs.setString('UID', uid);
+                        ref.read(uidProvider.notifier).state = uid;
+                      }
+                      context.go('/home_fb');
+                    } else {
+                      print('error occure');
+                    }
+                  },
+                  child: const Text(
+                    '로그인',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+                const SizedBox(
+                  height: 30,
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.black,
+                  ),
+                  onPressed: () async {
+                    context.go('/home');
+                  },
+                  child: const Text(
+                    '내장 SQL 이용',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+                const SizedBox(
+                  height: 32,
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.black,
+                  ),
+                  onPressed: () async {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const SqlTest(),
+                      ),
+                    );
+                  },
+                  child: const Text(
+                    'SQL Test',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.black,
+                  ),
+                  onPressed: () async {
+                    // email=formKey.
+                    // final SharedPreferences prefs =
+                    //     await SharedPreferences.getInstance();
+                    // if (saveAndValidateForm()) {
+                    //   // Obtain shared preferences.
+                    //   // final userPasswd = prefs.get('userPasswd');
+
+                    //   await prefs.setString('userId', email);
+                    //   final uid = await signIn();
+                    //   if (uid != null) {
+                    //     await prefs.setString('UID', uid);
+                    //     ref.read(uidProvider.notifier).state = uid;
+                    //   }
+                    //   context.go('/home_fb');
+                    // } else {
+                    //   print('error occure');
+                    // }
+                  },
+                  child: const Text(
+                    'firebase 이용',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+                // FilledButton(
+                //   onPressed: _moveData,
+                //   child: const Text('FB 데이터 옮기기'),
+                // )
+              ],
+            ),
           ),
         ),
       ),

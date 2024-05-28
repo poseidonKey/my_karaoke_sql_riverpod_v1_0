@@ -1,4 +1,5 @@
 import 'package:go_router/go_router.dart';
+import 'package:my_karaoke_sql_riverpod_v1_0/screens/auth_screen.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/screens/error_screen.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/screens/favority_song_fb_screen.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/screens/favority_song_screen.dart';
@@ -41,20 +42,27 @@ final routerUseWifi = GoRouter(
       ],
     ),
     GoRoute(
-        path: '/home_fb',
-        builder: (context, state) {
-          return const HomeScreenFirebase();
-        },
-        routes: [
-          GoRoute(
-            path: 'searchSongFb',
-            builder: (context, state) => SongSearchScreenFirebase(),
-          ),
-          GoRoute(
-            path: 'favoriteSongFb',
-            builder: (context, state) => const FavoritySongFirebaseScreen(),
-          ),
-        ])
+      path: '/home_fb',
+      builder: (context, state) {
+        return const HomeScreenFirebase();
+      },
+      routes: [
+        GoRoute(
+          path: 'searchSongFb',
+          builder: (context, state) => SongSearchScreenFirebase(),
+        ),
+        GoRoute(
+          path: 'favoriteSongFb',
+          builder: (context, state) => const FavoritySongFirebaseScreen(),
+        ),
+      ],
+    ),
+    GoRoute(
+      path: '/auth',
+      builder: (context, state) {
+        return const AuthScreen();
+      },
+    )
   ],
   errorBuilder: (context, state) => ErrorScreen(
     error: state.error.toString(),
