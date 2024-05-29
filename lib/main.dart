@@ -26,7 +26,7 @@ void main() async {
       app = const MyAppWithRouter();
     }
   } else {
-    app = const MyAppWithoutRouter();
+    app = const MyAppAuthScreen();
   }
 
   runApp(app);
