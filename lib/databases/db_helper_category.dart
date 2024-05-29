@@ -73,6 +73,7 @@ class DbHelperCategory {
   Future<List<SongItemCategory>> lastID() async {
     String query =
         'SELECT * FROM ${_dbHelperCategory.tableName} WHERE ID = (SELECT MAX(ID) FROM ${_dbHelperCategory.tableName});';
+    print(query);
     final List<Map<String, dynamic>> maps = await dbCate!.rawQuery(query);
     return maps
         .map(

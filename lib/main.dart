@@ -15,6 +15,8 @@ void main() async {
   final result = await Connectivity().checkConnectivity();
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   final uid = prefs.getString('UID');
+  print('result : $result');
+  print('uid : $uid');
 
   // Decide which MaterialApp to run based on connectivity
   Widget app;
