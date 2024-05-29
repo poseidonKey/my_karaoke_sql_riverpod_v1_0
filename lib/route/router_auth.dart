@@ -55,7 +55,11 @@ final routerAuth = GoRouter(
             path: 'favoriteSongFb',
             builder: (context, state) => const FavoritySongFirebaseScreen(),
           ),
-        ])
+        ]),
+    GoRoute(
+      path: '/auth',
+      builder: (context, state) => const AuthScreen(),
+    )
   ],
   errorBuilder: (context, state) => ErrorScreen(
     error: state.error.toString(),

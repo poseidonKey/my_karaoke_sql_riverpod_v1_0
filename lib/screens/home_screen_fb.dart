@@ -8,6 +8,7 @@ import 'package:my_karaoke_sql_riverpod_v1_0/databases/db_helper.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/models/song_item_category.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/filtered_song_list_fb_provider.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/song_category_notifier_fb_provider.dart';
+import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/song_category_notifier_provider.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/songs_count_fb_provider.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/uid_fb.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/screens/random_home_screen.dart';
@@ -36,7 +37,7 @@ class _HomeScreenFirebaseState extends ConsumerState<HomeScreenFirebase> {
   void initState() {
     super.initState();
     controller.addListener(scrollListener);
-    categoryList = ref.read(songCategoryListNotifierFirebaseProvider);
+    categoryList = ref.read(songCategoryListNotifierProvider);
     addUID();
   }
 
@@ -85,47 +86,6 @@ class _HomeScreenFirebaseState extends ConsumerState<HomeScreenFirebase> {
     if (SongCount.songsCountSQL != 0 && isAlert) {
       sub = (SongCount.songsCountFB - SongCount.songsCountSQL).abs();
     }
-
-    // log(SongCount.songsCountFB.toString());
-    // log('sql');
-    // log(SongCount.songsCountSQL.toString());
-
-    // if (SongCount.songsCountSQL != 0 && isAlert) {
-    //   final sub = (SongCount.songsCountFB - SongCount.songsCountSQL).abs();
-    //   if (SongCount.songsCountFB > SongCount.songsCountSQL) {
-    //     // showDialog(
-    //     //     context: context,
-    //     //     builder: (context) {
-    //     //       return AlertDialog(
-    //     //         title: const Text('UPdate 확인'),
-    //     //         content: Text('서버의 데이터가 로컬 데이타 보다 $sub 만큼 많습니다.'),
-    //     //         actions: [
-    //     //           ElevatedButton(
-    //     //               onPressed: () {
-    //     //                 Navigator.of(context).pop();
-    //     //               },
-    //     //               child: const Text('Cancel')),
-    //     //           ElevatedButton(
-    //     //               onPressed: () {
-    //     //                 Navigator.of(context).pop();
-    //     //               },
-    //     //               child: const Text('update')),
-    //     //         ],
-    //     //       );
-    //     //     });
-    //     showBottomSheet(
-    //         context: context,
-    //         builder: (context) {
-    //           return Container();
-    //         });
-    //     print('fb  $sub big');
-    //   } else if (SongCount.songsCountFB < SongCount.songsCountSQL) {
-    //     print('sql $sub big');
-    //   } else {
-    //     print('==');
-    //   }
-    //   isAlert = false;
-    // }
 
     categoryList = ref.watch(songCategoryListNotifierFirebaseProvider);
 
@@ -394,7 +354,7 @@ class _HomeScreenFirebaseState extends ConsumerState<HomeScreenFirebase> {
                 await prefs.remove('password');
                 await prefs.remove('UID');
                 ref.read(uidProvider.notifier).state = '';
-                context.go('/');
+                context.go('/auth');
                 Navigator.of(context).pop();
               },
               child: const Text(
@@ -427,7 +387,10 @@ class _HomeScreenFirebaseState extends ConsumerState<HomeScreenFirebase> {
     return ListTile(
       title: Text(
         janreName,
-        style: optionStyle1,
+        style: janreName == '모든 곡'
+            ? optionStyle1.copyWith(
+                color: Colors.red, fontWeight: FontWeight.w700, fontSize: 23)
+            : optionStyle1,
       ),
       onTap: () async {
         Navigator.of(context).pop();

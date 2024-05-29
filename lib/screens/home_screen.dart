@@ -5,8 +5,10 @@ import 'package:go_router/go_router.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/components/song_item_component.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/const/const.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/databases/db_helper.dart';
+import 'package:my_karaoke_sql_riverpod_v1_0/models/song_item_category.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/models/song_item_model.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/filtered_song_list_provider.dart';
+import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/song_category_notifier_provider.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/song_item_notifier_provider.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/songs_count_provider.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/screens/random_home_screen.dart';
@@ -23,10 +25,15 @@ class HomeScreen extends ConsumerStatefulWidget {
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   final ScrollController controller = ScrollController();
   final List<String> popupMenu = ['즐겨찾기 화면', '곡 찾기 화면', 'DB 관리'];
+  late List<SongItemCategory> categoryList;
+  String janre = '모든 곡';
+  bool isReversed = false;
+
   @override
   void initState() {
     super.initState();
     controller.addListener(scrollListener);
+    categoryList = ref.read(songCategoryListNotifierProvider);
     getDBCount();
   }
 
@@ -56,13 +63,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   @override
-  Widget build(
-    BuildContext context,
-  ) {
+  Widget build(BuildContext context) {
     final state = ref.watch(filteredSongListProvider);
+    categoryList = ref.watch(songCategoryListNotifierProvider);
     // ref.read(songCountProvider.notifier).update((state1) => state.length);
     final count = ref.watch(songCountProvider);
-    final janre = ref.watch(filterProvider);
+    final janre = ref.watch(filterProviderSQL);
     return Scaffold(
       appBar: AppBar(
         title: const Text('My Like Songs [SQL]'),
@@ -126,12 +132,27 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         child: Column(
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                IconButton(
+                  onPressed: () {
+                    if (isReversed) {
+                      ref.read(sortOrderProviderSQL.notifier).state =
+                          SortOrderSQL.ascending;
+                    } else {
+                      ref.read(sortOrderProviderSQL.notifier).state =
+                          SortOrderSQL.descending;
+                    }
+                    isReversed = !isReversed;
+                  },
+                  icon: const Icon(Icons.flip_camera_android),
+                  iconSize: 30,
+                  tooltip: '순서바꾸기',
+                ),
                 Text(
                   // '총 곡수 : $count 곡, $janre',
-                  '총 곡수 : $count 곡  ',
+                  '쟝르: $janre ,총 곡수 : $count 곡 ',
                   style: const TextStyle(
                       color: Colors.deepPurple,
                       fontWeight: FontWeight.bold,
@@ -209,16 +230,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         onPressed: () async {
           await Navigator.of(context).push(
               MaterialPageRoute(builder: (context) => const SongAddScreen()));
-          // print(result);
-          // if (result == 'success') {
-          //   // await ref
-          //   //     .read(songItemListNotifierProvider.notifier)
-          //   //     .refreshSongsList();
-          //   // print(state.length);
-          //   // ref
-          //   //     .read(songCountProvider.notifier)
-          //   //     .update((State) => state.length + 1);
-          // }
         },
         child: const Icon(Icons.add),
       ),
@@ -240,100 +251,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               style: optionStyle,
             ),
           ),
-          ListTile(
-            title: const Text(
-              '모든 곡',
-              style: optionStyle1,
-            ),
-            onTap: () async {
-              Navigator.pop(context);
-              ref.read(filterProvider.notifier).update((state) => Jenre.ALL);
-              final songs = ref.read(filteredSongListProvider);
-              ref.read(songCountProvider.notifier).update(
-                    (state) => songs.length,
-                  );
-            },
-          ),
-          ListTile(
-            title: const Text(
-              '발라드',
-              style: optionStyle1,
-            ),
-            onTap: () async {
-              Navigator.pop(context);
-              ref
-                  .read(filterProvider.notifier)
-                  .update((state) => Jenre.BALLADE);
-              final songs = ref.read(filteredSongListProvider);
-              ref.read(songCountProvider.notifier).update(
-                    (state) => songs.length,
-                  );
-            },
-          ),
-          ListTile(
-            title: const Text(
-              '트로트',
-              style: optionStyle1,
-            ),
-            onTap: () async {
-              Navigator.pop(context);
-              ref.read(filterProvider.notifier).update((state) => Jenre.TROT);
-              final songs = ref.read(filteredSongListProvider);
-              // print(songs.length);
-
-              ref.read(songCountProvider.notifier).update(
-                    (state) => songs.length,
-                  );
-            },
-          ),
-          ListTile(
-            title: const Text(
-              '팝',
-              style: optionStyle1,
-            ),
-            onTap: () async {
-              Navigator.pop(context);
-              ref.read(filterProvider.notifier).update((state) => Jenre.POP);
-              final songs = ref.read(filteredSongListProvider);
-              // print(songs.length);
-
-              ref.read(songCountProvider.notifier).update(
-                    (state) => songs.length,
-                  );
-            },
-          ),
-          ListTile(
-            title: const Text(
-              '댄스',
-              style: optionStyle1,
-            ),
-            onTap: () async {
-              Navigator.pop(context);
-              ref.read(filterProvider.notifier).update((state) => Jenre.DANCE);
-              final songs = ref.read(filteredSongListProvider);
-
-              ref.read(songCountProvider.notifier).update(
-                    (state) => songs.length,
-                  );
-            },
-          ),
-          ListTile(
-            title: const Text(
-              '클래식',
-              style: optionStyle1,
-            ),
-            onTap: () async {
-              Navigator.pop(context);
-              ref
-                  .read(filterProvider.notifier)
-                  .update((state) => Jenre.CLASSIC);
-              final songs = ref.read(filteredSongListProvider);
-
-              ref.read(songCountProvider.notifier).update(
-                    (state) => songs.length,
-                  );
-            },
-          ),
+          categoryMenu(context: context, janreName: '모든 곡'),
+          ...categoryList
+              .map(
+                (e) => categoryMenu(
+                    context: context, janreName: e.songJanreCategory),
+              )
+              .toList(),
           SizedBox(
             height: 30,
             child: Container(
@@ -405,6 +329,28 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               child: const Text('fb make Data'))
         ],
       ),
+    );
+  }
+
+  ListTile categoryMenu(
+      {required BuildContext context, required String janreName}) {
+    return ListTile(
+      title: Text(
+        janreName,
+        style: janreName == '모든 곡'
+            ? optionStyle1.copyWith(
+                color: Colors.red, fontWeight: FontWeight.w700, fontSize: 23)
+            : optionStyle1,
+      ),
+      onTap: () async {
+        Navigator.of(context).pop();
+        ref.read(filterProviderSQL.notifier).update((state) => janreName);
+        final songs = ref.read(filteredSongListProvider);
+        ref.read(songCountProvider.notifier).update(
+              (state) => songs.length,
+            );
+        janre = janreName;
+      },
     );
   }
 }
