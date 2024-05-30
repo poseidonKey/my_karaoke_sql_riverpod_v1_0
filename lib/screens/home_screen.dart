@@ -93,11 +93,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             },
             onSelected: (value) {
               if (value == '즐겨찾기 화면') {
-                context.go('/favoritySong');
+                context.go('/home/favoritySong');
               } else if (value == 'DB 관리') {
-                context.go('/testDataManage');
+                context.go('/home/testDataManage');
               } else {
-                context.go('/searchSong');
+                context.go('/home/searchSong');
               }
             },
           ),

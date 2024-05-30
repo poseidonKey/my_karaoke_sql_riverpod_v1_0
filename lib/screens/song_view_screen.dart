@@ -19,7 +19,8 @@ class SongViewscreen extends StatelessWidget {
                 subject: '제목 : ', content: item.songName, isNumber: false),
             _getContentsValue(
                 subject: '장르 : ',
-                content: item.songJanre == 'true' ? 'Check' : '추가하지 않음',
+                content: item
+                    .songJanre, // item.songJanre  == 'true' ? 'Check' : '추가하지 않음',
                 isNumber: false),
             _getContentsValue(
                 subject: '즐겨찾기 : ',
