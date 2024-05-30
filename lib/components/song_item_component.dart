@@ -111,14 +111,22 @@ class _SongItemComponent1State extends ConsumerState<SongItemComponent> {
             );
             print(widget.item.id);
           },
-          onDoubleTap: () {
+          onDoubleTap: () async {
             // context.go('/home/songEdit');
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                  builder: (context) => SongEditScreen(
-                        songItem: widget.item,
-                      )),
+            final String result = await Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) {
+                return SongEditScreen(
+                  songItem: widget.item,
+                );
+              }),
             );
+            if (result == 'success') {
+              setState(() {
+                ref
+                    .read(songItemListNotifierProvider.notifier)
+                    .refreshSongsList();
+              });
+            }
           },
         ),
         trailing: IconButton(

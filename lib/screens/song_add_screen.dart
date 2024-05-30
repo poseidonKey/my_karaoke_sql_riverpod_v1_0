@@ -3,7 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/databases/db_helper.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/layout/default_layout.dart';
+import 'package:my_karaoke_sql_riverpod_v1_0/models/song_item_category.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/models/song_item_model.dart';
+import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/song_category_notifier_provider.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/song_item_notifier_provider.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/songs_count_provider.dart';
 
@@ -19,10 +21,11 @@ class _SongAddScreenState extends ConsumerState<SongAddScreen> {
   AutovalidateMode autovalidateMode = AutovalidateMode.disabled;
   String? _songName, _songGYNumber, _songTJNumber, _songUtubeAddress, _songETC;
   final String _songFavorite = "false";
-  String _selJanre = "";
+  String? _selJanre;
   @override
   Widget build(BuildContext context) {
     // final bottomInset = MediaQuery.of(context).viewInsets.bottom;
+    final categories = ref.watch(songCategoryListNotifierProvider);
     return DefaultLayout(
       title: '곡 추가',
       body: SingleChildScrollView(
@@ -97,29 +100,30 @@ class _SongAddScreenState extends ConsumerState<SongAddScreen> {
                   ),
                   child: Row(
                     children: [
-                      const Text(
-                        "노래 쟝르를 선택하세요!",
-                        style: TextStyle(
+                      Text(
+                        _selJanre ?? '쟝르를 선택하세요',
+                        style: const TextStyle(
                             color: Colors.red, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(
                         width: 20,
                       ),
                       DropdownButton(
-                        items: ["팝", "발라드", "클래식", "트로트", "댄스"]
+                        // items: ["팝", "발라드", "클래식", "트로트", "댄스"]
+                        items: categories
                             .map((e) => DropdownMenuItem(
                                   value: e,
-                                  child: Text("장르 : $e"),
+                                  child: Text(e.songJanreCategory),
                                 ))
                             .toList(),
-                        onChanged: (String? value) {
+                        onChanged: (SongItemCategory? value) {
+                          // print(value?.songJanreCategory);
                           setState(() {
-                            _selJanre = value ?? "";
+                            _selJanre = value?.songJanreCategory ?? '';
                           });
                         },
                         icon: const Icon(Icons.pin_drop),
                       ),
-                      Text(_selJanre)
                     ],
                   ),
                 ),
@@ -201,7 +205,7 @@ class _SongAddScreenState extends ConsumerState<SongAddScreen> {
           _songName!,
           _songGYNumber!,
           _songTJNumber!,
-          _selJanre,
+          _selJanre ?? '',
           _songUtubeAddress!,
           _songETC!,
           "${DateTime.now().year}.${DateTime.now().month}.${DateTime.now().day}",

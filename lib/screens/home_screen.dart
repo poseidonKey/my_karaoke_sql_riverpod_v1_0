@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -9,10 +8,8 @@ import 'package:my_karaoke_sql_riverpod_v1_0/models/song_item_category.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/models/song_item_model.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/filtered_song_list_provider.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/song_category_notifier_provider.dart';
-import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/song_item_notifier_provider.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/songs_count_provider.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/screens/random_home_screen.dart';
-import 'package:my_karaoke_sql_riverpod_v1_0/screens/song_add_screen.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/screens/song_janre_category_screen.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
@@ -36,6 +33,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     categoryList = ref.read(songCategoryListNotifierProvider);
     getDBCount();
   }
+
+  // @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+  //   myAlert(context);
+  // }
 
   void scrollListener() {
     if (controller.offset > controller.position.maxScrollExtent - 300) {
@@ -71,7 +74,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final janre = ref.watch(filterProviderSQL);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My Like Songs [SQL]'),
+        title: const Text('애창곡 [내부데이터]'),
         actions: [
           PopupMenuButton(
             itemBuilder: (_) {
@@ -90,11 +93,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             },
             onSelected: (value) {
               if (value == '즐겨찾기 화면') {
-                context.go('/home/favoritySong');
+                context.go('/favoritySong');
               } else if (value == 'DB 관리') {
-                context.go('/home/testDataManage');
+                context.go('/testDataManage');
               } else {
-                context.go('/home/searchSong');
+                context.go('/searchSong');
               }
             },
           ),
@@ -228,8 +231,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          await Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => const SongAddScreen()));
+          context.go('/home/songAdd');
+          // await Navigator.of(context).push(
+          //     MaterialPageRoute(builder: (context) => const SongAddScreen()));
         },
         child: const Icon(Icons.add),
       ),
@@ -315,18 +319,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               );
             },
           ),
-          ElevatedButton(
-              onPressed: () async {
-                final datas = ref.read(songItemListNotifierProvider);
-                for (SongItemModel item in datas) {
-                  final song = item.toMap();
-                  await FirebaseFirestore.instance
-                      .collection('songs')
-                      .doc(item.id)
-                      .set(song);
-                }
-              },
-              child: const Text('fb make Data'))
+          // ElevatedButton(
+          //     onPressed: () async {
+          //       final datas = ref.read(songItemListNotifierProvider);
+          //       for (SongItemModel item in datas) {
+          //         final song = item.toMap();
+          //         await FirebaseFirestore.instance
+          //             .collection('songs')
+          //             .doc(item.id)
+          //             .set(song);
+          //       }
+          //     },
+          //     child: const Text('fb make Data'))
         ],
       ),
     );

@@ -17,83 +17,92 @@ class SongJanreCategoryScreen extends ConsumerWidget {
           title: const Text('Category 관리'),
         ),
         body: state.isEmpty
-            ? Column(
-                children: [
-                  const Center(
-                    child: Text('empty'),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    child: SizedBox(
-                      height: 5,
-                      child: Container(
-                        color: Colors.red,
+            ? Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: Column(
+                  children: [
+                    const Flexible(
+                      flex: 2,
+                      child: Center(
+                        child: Text('empty'),
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 32),
-                    child: TextField(
-                      controller: controller,
-                      decoration: const InputDecoration(labelText: '추가할 쟝르'),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: SizedBox(
+                        height: 5,
+                        child: Container(
+                          color: Colors.red,
+                        ),
+                      ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 32, vertical: 16),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        ElevatedButton(
-                          onPressed: () async {
-                            print(controller.text);
-                            try {
-                              DbHelperCategory helper = DbHelperCategory();
-                              await helper.openDbCategory();
-                              final result = await helper.lastID();
-                              int idNum;
-                              if (result.isEmpty) {
-                                idNum = 1;
-                              } else {
-                                idNum = int.parse(result[0].id!) + 1;
-                              }
-                              print(idNum);
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 32),
+                      child: TextField(
+                        controller: controller,
+                        decoration: const InputDecoration(labelText: '추가할 쟝르'),
+                      ),
+                    ),
+                    Flexible(
+                      flex: 1,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 32, vertical: 16),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            ElevatedButton(
+                              onPressed: () async {
+                                print(controller.text);
+                                try {
+                                  DbHelperCategory helper = DbHelperCategory();
+                                  await helper.openDbCategory();
+                                  final result = await helper.lastID();
+                                  int idNum;
+                                  if (result.isEmpty) {
+                                    idNum = 1;
+                                  } else {
+                                    idNum = int.parse(result[0].id!) + 1;
+                                  }
+                                  print(idNum);
 
-                              final sic = SongItemCategory(
-                                  idNum.toString(), controller.text);
-                              await helper.insertList(sic);
-                              await ref
-                                  .read(
-                                      songCategoryListNotifierProvider.notifier)
-                                  .getDBDataRefresh();
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content: Text(
-                                          'message : success Add category')));
-                              controller.text = '';
-                            } catch (e) {
-                              print('error : $e');
-                            }
-                          },
-                          style: ElevatedButton.styleFrom(
-                              foregroundColor: Colors.red),
-                          child: const Text('Add'),
+                                  final sic = SongItemCategory(
+                                      idNum.toString(), controller.text);
+                                  await helper.insertList(sic);
+                                  await ref
+                                      .read(songCategoryListNotifierProvider
+                                          .notifier)
+                                      .getDBDataRefresh();
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                          content: Text(
+                                              'message : success Add category')));
+                                  controller.text = '';
+                                } catch (e) {
+                                  print('error : $e');
+                                }
+                              },
+                              style: ElevatedButton.styleFrom(
+                                  foregroundColor: Colors.red),
+                              child: const Text('Add'),
+                            ),
+                            const SizedBox(
+                              width: 16,
+                            ),
+                            ElevatedButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              style: ElevatedButton.styleFrom(
+                                  foregroundColor: Colors.blue),
+                              child: const Text('Close'),
+                            ),
+                          ],
                         ),
-                        const SizedBox(
-                          width: 16,
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          style: ElevatedButton.styleFrom(
-                              foregroundColor: Colors.blue),
-                          child: const Text('Close'),
-                        ),
-                      ],
-                    ),
-                  )
-                ],
+                      ),
+                    )
+                  ],
+                ),
               )
             : Column(
                 children: [

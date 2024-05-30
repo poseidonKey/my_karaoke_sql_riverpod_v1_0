@@ -91,7 +91,7 @@ class _HomeScreenFirebaseState extends ConsumerState<HomeScreenFirebase> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My Like Songs [FB]'),
+        title: const Text('애창곡 [외부데이터]'),
         actions: [
           PopupMenuButton(
             itemBuilder: (_) {
@@ -128,7 +128,7 @@ class _HomeScreenFirebaseState extends ConsumerState<HomeScreenFirebase> {
       body: SafeArea(
         child: (SongCount.songsCountSQL != 0 && isAlert)
             ? AlertDialog(
-                title: const Text('UPdate 확인'),
+                title: const Text('UPdate 확인, 개발 진행 중!'),
                 content: Text('서버의 데이터가 로컬 데이타 보다 $sub 만큼 많습니다.'),
                 actions: [
                   ElevatedButton(
