@@ -26,6 +26,10 @@ class _SongAddScreenState extends ConsumerState<SongAddScreen> {
   Widget build(BuildContext context) {
     // final bottomInset = MediaQuery.of(context).viewInsets.bottom;
     final categories = ref.watch(songCategoryListNotifierProvider);
+    List<String> cateList = [];
+    for (var element in categories) {
+      cateList.add(element.songJanreCategory);
+    }
     return DefaultLayout(
       title: '곡 추가',
       body: SingleChildScrollView(

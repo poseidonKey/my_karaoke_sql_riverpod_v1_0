@@ -19,8 +19,72 @@ class SongJanreCategoryFirebaseScreen extends ConsumerWidget {
           title: const Text('Category 관리'),
         ),
         body: state.isEmpty
-            ? const Center(
-                child: Text('empty'),
+            ? Center(
+                child: Column(
+                  children: [
+                    const Text('기록된 노래 관리 장르가 없습니다.'),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 32, vertical: 16),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          ElevatedButton(
+                            onPressed: () async {
+                              print(controller.text);
+                              String? maxID = await getMaxID();
+                              if (maxID != null) {
+                                print('Max ID: $maxID');
+                                try {
+                                  final result = maxID;
+                                  final idNum = int.parse(result) + 1;
+                                  // print(idNum);
+
+                                  final sic = SongItemCategory(
+                                      idNum.toString(), controller.text);
+                                  final uid = ref.read(uidProvider);
+                                  await MyFirebaseService.instance
+                                      .doc(uid)
+                                      .collection('songCategoris')
+                                      .doc(idNum.toString())
+                                      .set(sic.toMap());
+                                  await ref
+                                      .read(
+                                          songCategoryListNotifierFirebaseProvider
+                                              .notifier)
+                                      .getDBDataFirebaseRefresh();
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                          content: Text(
+                                              'message : success Add category')));
+                                  controller.text = '';
+                                } catch (e) {
+                                  print('error : $e');
+                                }
+                              } else {
+                                print('No documents found.');
+                              }
+                            },
+                            style: ElevatedButton.styleFrom(
+                                foregroundColor: Colors.red),
+                            child: const Text('Add'),
+                          ),
+                          const SizedBox(
+                            width: 16,
+                          ),
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            style: ElevatedButton.styleFrom(
+                                foregroundColor: Colors.blue),
+                            child: const Text('Close'),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
               )
             : Column(
                 children: [

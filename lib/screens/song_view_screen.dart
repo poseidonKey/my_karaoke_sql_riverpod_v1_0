@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/layout/default_layout.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/models/song_item_model.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/screens/youtube_view_screen.dart';
+import 'package:my_karaoke_sql_riverpod_v1_0/util/firebase_service.dart';
 
 class SongViewscreen extends StatelessWidget {
   final SongItemModel item;
@@ -53,17 +54,19 @@ class SongViewscreen extends StatelessWidget {
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
                 ),
                 IconButton(
-                    onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) {
-                          return const YoutubeViewScreen(
-                            songUrl:
-                                'https://www.youtube.com/watch?v=S6y2S3tfMRQ',
-                          );
-                          // return const CustomYoutubePlayer();
-                        }),
-                      );
-                    },
+                    onPressed: MyFirebaseService.enabledWifi
+                        ? () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(builder: (context) {
+                                return YoutubeViewScreen(
+                                  songUrl: item.songUtubeAddress,
+                                  // 'https://www.youtube.com/watch?v=S6y2S3tfMRQ',
+                                );
+                                // return const CustomYoutubePlayer();
+                              }),
+                            );
+                          }
+                        : null,
                     icon: const Icon(
                       Icons.movie,
                       size: 40,

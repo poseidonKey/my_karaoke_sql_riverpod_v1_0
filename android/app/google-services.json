@@ -12,7 +12,20 @@
           "package_name": "com.example.my_karaoke_sql_riverpod_v1_0"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "121449346263-hjg6195vo87okquokodm6a4g67vhktod.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.my_karaoke_sql_riverpod_v1_0",
+            "certificate_hash": "3279a033b0a898835fe964a5da4db8c6108ff4e8"
+          }
+        },
+        {
+          "client_id": "121449346263-8gno2hq01bhrmovg0ajs7fl6mo1er797.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyB0MsiG8DuNE1RbFpCrB8amCzniLnDwX-Y"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "121449346263-8gno2hq01bhrmovg0ajs7fl6mo1er797.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "121449346263-qsdknj8qbut2afadk6j25h490o44vjir.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.myKaraokeSqlRiverpodV10"
+              }
+            }
+          ]
         }
       }
     }

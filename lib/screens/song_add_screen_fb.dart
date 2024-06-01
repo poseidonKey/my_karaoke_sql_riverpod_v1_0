@@ -157,6 +157,7 @@ class _SongAddScreenState extends ConsumerState<SongAddScreenFirebase> {
                       filled: true,
                       labelText: '특기사항',
                     ),
+                    maxLines: 2,
                     onSaved: (val) => _songETC = val ?? "",
                   ),
                 ),
@@ -235,7 +236,7 @@ class _SongAddScreenState extends ConsumerState<SongAddScreenFirebase> {
           _songTJNumber!,
           _selJanre,
           _songUtubeAddress!,
-          _songETC!,
+          _songETC ?? '가사나 기타 참고사항 기록',
           "${DateTime.now().year}.${DateTime.now().month}.${DateTime.now().day}",
           _songFavorite);
       final newSongJson = newSong.toMap();

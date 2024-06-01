@@ -132,7 +132,7 @@ class _SongEditScreenFirebaseState
                           items: cateList
                               .map((e) => DropdownMenuItem(
                                     value: e,
-                                    child: Text("장르 : $e"),
+                                    child: Text(e),
                                   ))
                               .toList(),
                           onChanged: (String? value) {

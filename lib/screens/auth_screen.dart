@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/components/login_text_field.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/const/const.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/uid_fb.dart';
@@ -181,6 +182,13 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                     height: 32,
                   ),
                   ElevatedButton(
+                    onPressed: () async {
+                      await onGoogleLoginPressMy(context);
+                    },
+                    // onPressed: () {},
+                    child: const Text('Google Login'),
+                  ),
+                  ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.black,
                     ),
@@ -245,6 +253,42 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
     formKey.currentState!.save();
 
     return true;
+  }
+
+  onGoogleLoginPressMy(BuildContext context) async {
+    GoogleSignIn googleSignIn = GoogleSignIn(scopes: [
+      'email',
+    ]);
+    try {
+      GoogleSignInAccount? account = await googleSignIn.signIn();
+      print(account?.email);
+      final GoogleSignInAuthentication? googleAuth =
+          await account?.authentication;
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth?.accessToken,
+        idToken: googleAuth?.idToken,
+      );
+      await FirebaseAuth.instance.signInWithCredential(credential);
+      final uid = FirebaseAuth.instance.currentUser!.uid;
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString('userId', email);
+      await prefs.setString('passwd', password);
+      await prefs.setString('UID', uid);
+      ref.read(uidProvider.notifier).state = uid;
+      context.go('/home_fb');
+
+      // Navigator.of(context).push(
+      //   MaterialPageRoute(
+      //     builder: (_) => Container(),
+      //   ),
+      // );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('message : login Error'),
+        ),
+      );
+    }
   }
 
   Future<void> _moveData() async {

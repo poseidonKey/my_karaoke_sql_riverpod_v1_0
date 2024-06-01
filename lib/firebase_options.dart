@@ -63,6 +63,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '121449346263',
     projectId: 'my-karaoke-riverpod',
     storageBucket: 'my-karaoke-riverpod.appspot.com',
+    androidClientId: '121449346263-hjg6195vo87okquokodm6a4g67vhktod.apps.googleusercontent.com',
+    iosClientId: '121449346263-qsdknj8qbut2afadk6j25h490o44vjir.apps.googleusercontent.com',
     iosBundleId: 'com.example.myKaraokeSqlRiverpodV10',
   );
 
@@ -72,6 +74,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '121449346263',
     projectId: 'my-karaoke-riverpod',
     storageBucket: 'my-karaoke-riverpod.appspot.com',
+    androidClientId: '121449346263-hjg6195vo87okquokodm6a4g67vhktod.apps.googleusercontent.com',
+    iosClientId: '121449346263-qsdknj8qbut2afadk6j25h490o44vjir.apps.googleusercontent.com',
     iosBundleId: 'com.example.myKaraokeSqlRiverpodV10',
   );
 
@@ -83,4 +87,5 @@ class DefaultFirebaseOptions {
     authDomain: 'my-karaoke-riverpod.firebaseapp.com',
     storageBucket: 'my-karaoke-riverpod.appspot.com',
   );
+
 }

@@ -6,6 +6,7 @@ import 'package:my_karaoke_sql_riverpod_v1_0/firebase_options.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/route/router.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/route/router_auth.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/route/router_use_wifi.dart';
+import 'package:my_karaoke_sql_riverpod_v1_0/util/firebase_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
@@ -15,13 +16,14 @@ void main() async {
   final result = await Connectivity().checkConnectivity();
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   final uid = prefs.getString('UID');
-  print('result : $result');
-  print('uid : $uid');
+  // print('result : $result');
+  // print('uid : $uid');
 
   // Decide which MaterialApp to run based on connectivity
   Widget app;
   if (result == ConnectivityResult.wifi ||
       result == ConnectivityResult.mobile) {
+    MyFirebaseService.enabledWifi = true;
     if (uid == null) {
       app = const MyAppAuthScreen();
     } else {
