@@ -153,6 +153,23 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                           await prefs.setString('UID', uid);
                           ref.read(uidProvider.notifier).state = uid;
                         }
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                                title: const Text('정보!'),
+                                content: const Text(
+                                    '이전 로그인 정보로 실행될 수 있습니다.\n앱을 종료 후 재 실행하세요.'),
+                                actions: [
+                                  TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                        context.go('/home_fb');
+                                      },
+                                      child: const Text('Close'))
+                                ]);
+                          },
+                        );
                         context.go('/home_fb');
                       } else {
                         print('error occure');
