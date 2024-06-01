@@ -26,6 +26,7 @@ class AuthGoogleLoginScreen extends StatelessWidget {
         accessToken: googleAuth?.accessToken,
         idToken: googleAuth?.idToken,
       );
+      print(credential);
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (_) => const GoogleSuccessScreen(),
