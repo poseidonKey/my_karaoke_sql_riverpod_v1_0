@@ -74,7 +74,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final janre = ref.watch(filterProviderSQL);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('애창곡 [내부데이터]'),
+        title: const Text(
+          '애창곡 [내부데이터]',
+          style: TextStyle(
+            color: Colors.blueAccent,
+            fontSize: 23,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         actions: [
           PopupMenuButton(
             itemBuilder: (_) {

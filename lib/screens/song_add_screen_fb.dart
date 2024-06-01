@@ -22,7 +22,7 @@ class _SongAddScreenState extends ConsumerState<SongAddScreenFirebase> {
   AutovalidateMode autovalidateMode = AutovalidateMode.disabled;
   String? _songName, _songGYNumber, _songTJNumber, _songUtubeAddress, _songETC;
   final String _songFavorite = "false";
-  final String _selJanre = "";
+  String _selJanre = "곡 쟝르를 선택하세요!";
   @override
   Widget build(BuildContext context) {
     // final bottomInset = MediaQuery.of(context).viewInsets.bottom;
@@ -104,11 +104,15 @@ class _SongAddScreenState extends ConsumerState<SongAddScreenFirebase> {
                     vertical: 5.0,
                   ),
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      const Text(
-                        "노래 쟝르를 선택하세요!",
-                        style: TextStyle(
-                            color: Colors.red, fontWeight: FontWeight.bold),
+                      Text(
+                        _selJanre,
+                        style: const TextStyle(
+                          color: Colors.red,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 25,
+                        ),
                       ),
                       const SizedBox(
                         width: 20,
@@ -117,18 +121,22 @@ class _SongAddScreenState extends ConsumerState<SongAddScreenFirebase> {
                         items: cateList
                             .map((e) => DropdownMenuItem(
                                   value: e,
-                                  child: Text("장르 : $e"),
+                                  child: Text(
+                                    e,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
                                 ))
                             .toList(),
                         onChanged: (String? value) {
                           print('touch');
                           setState(() {
-                            // _selJanre = value ?? "";
+                            _selJanre = value ?? "";
                           });
                         },
                         icon: const Icon(Icons.pin_drop),
                       ),
-                      Text(_selJanre)
                     ],
                   ),
                 ),
@@ -181,25 +189,25 @@ class _SongAddScreenState extends ConsumerState<SongAddScreenFirebase> {
                     ),
                   ],
                 ),
-                ElevatedButton(
-                  onPressed: () async {
-                    String collectionName =
-                        'songs'; // Replace with the actual collection name
-                    DocumentSnapshot? document =
-                        await findDocumentWithHighestId(collectionName);
+                // ElevatedButton(
+                //   onPressed: () async {
+                //     String collectionName =
+                //         'songs'; // Replace with the actual collection name
+                //     DocumentSnapshot? document =
+                //         await findDocumentWithHighestId(collectionName);
 
-                    if (document != null) {
-                      print('Document with the highest ID: ${document.id}');
-                      print('Document data: ${document.data()}');
-                    } else {
-                      print('No documents found in the collection.');
-                    }
-                  },
-                  child: const Text(
-                    'Max ID Test',
-                    style: TextStyle(fontSize: 20.0),
-                  ),
-                ),
+                //     if (document != null) {
+                //       print('Document with the highest ID: ${document.id}');
+                //       print('Document data: ${document.data()}');
+                //     } else {
+                //       print('No documents found in the collection.');
+                //     }
+                //   },
+                //   child: const Text(
+                //     'Max ID Test',
+                //     style: TextStyle(fontSize: 20.0),
+                //   ),
+                // ),
               ],
             ),
           ),

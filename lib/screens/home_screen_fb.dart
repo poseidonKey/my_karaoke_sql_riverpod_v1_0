@@ -1,6 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/components/song_item_component_fb.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/const/const.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/const/song_count.dart';
@@ -91,7 +94,15 @@ class _HomeScreenFirebaseState extends ConsumerState<HomeScreenFirebase> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('애창곡 [외부데이터]'),
+        title: const Text(
+          '애창곡 [외부데이터]',
+          style: TextStyle(
+            color: Colors.blueAccent,
+            fontSize: 23,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        centerTitle: true,
         actions: [
           PopupMenuButton(
             itemBuilder: (_) {
@@ -354,6 +365,8 @@ class _HomeScreenFirebaseState extends ConsumerState<HomeScreenFirebase> {
                 await prefs.remove('password');
                 await prefs.remove('UID');
                 ref.read(uidProvider.notifier).state = '';
+                await GoogleSignIn().signOut();
+                await FirebaseAuth.instance.signOut();
                 context.go('/auth');
                 Navigator.of(context).pop();
               },

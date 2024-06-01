@@ -24,6 +24,13 @@ class SongJanreCategoryFirebaseScreen extends ConsumerWidget {
                   children: [
                     const Text('기록된 노래 관리 장르가 없습니다.'),
                     Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 32),
+                      child: TextField(
+                        controller: controller,
+                        decoration: const InputDecoration(labelText: '추가할 쟝르'),
+                      ),
+                    ),
+                    Padding(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 32, vertical: 16),
                       child: Row(
@@ -31,38 +38,38 @@ class SongJanreCategoryFirebaseScreen extends ConsumerWidget {
                         children: [
                           ElevatedButton(
                             onPressed: () async {
+                              final uid = ref.read(uidProvider);
+                              int idNum;
                               print(controller.text);
-                              String? maxID = await getMaxID();
-                              if (maxID != null) {
-                                print('Max ID: $maxID');
-                                try {
-                                  final result = maxID;
-                                  final idNum = int.parse(result) + 1;
-                                  // print(idNum);
-
-                                  final sic = SongItemCategory(
-                                      idNum.toString(), controller.text);
-                                  final uid = ref.read(uidProvider);
-                                  await MyFirebaseService.instance
-                                      .doc(uid)
-                                      .collection('songCategoris')
-                                      .doc(idNum.toString())
-                                      .set(sic.toMap());
-                                  await ref
-                                      .read(
-                                          songCategoryListNotifierFirebaseProvider
-                                              .notifier)
-                                      .getDBDataFirebaseRefresh();
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                          content: Text(
-                                              'message : success Add category')));
-                                  controller.text = '';
-                                } catch (e) {
-                                  print('error : $e');
-                                }
+                              String? maxID = await getMaxID(uid);
+                              print(maxID);
+                              if (maxID == null) {
+                                idNum = 1;
                               } else {
-                                print('No documents found.');
+                                idNum = int.parse(maxID) + 1;
+                              }
+                              print('Max ID: $maxID');
+                              try {
+                                final sic = SongItemCategory(
+                                    idNum.toString(), controller.text);
+                                final uid = ref.read(uidProvider);
+                                await MyFirebaseService.instance
+                                    .doc(uid)
+                                    .collection('songCategoris')
+                                    .doc(idNum.toString())
+                                    .set(sic.toMap());
+                                await ref
+                                    .read(
+                                        songCategoryListNotifierFirebaseProvider
+                                            .notifier)
+                                    .getDBDataFirebaseRefresh();
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content: Text(
+                                            'message : success Add category')));
+                                controller.text = '';
+                              } catch (e) {
+                                print('error : $e');
                               }
                             },
                             style: ElevatedButton.styleFrom(
@@ -170,7 +177,8 @@ class SongJanreCategoryFirebaseScreen extends ConsumerWidget {
                         ElevatedButton(
                           onPressed: () async {
                             print(controller.text);
-                            String? maxID = await getMaxID();
+                            final uid = ref.read(uidProvider);
+                            String? maxID = await getMaxID(uid);
                             if (maxID != null) {
                               print('Max ID: $maxID');
                               try {
@@ -227,13 +235,15 @@ class SongJanreCategoryFirebaseScreen extends ConsumerWidget {
     );
   }
 
-  Future<String?> getMaxID() async {
+  Future<String?> getMaxID(String uid) async {
     try {
       // Get a reference to the Firestore database
       FirebaseFirestore firestore = FirebaseFirestore.instance;
 
       // Query the collection and order documents by ID in descending order
       QuerySnapshot querySnapshot = await firestore
+          .collection('allSongs')
+          .doc(uid)
           .collection('songCategoris')
           .orderBy('id', descending: true)
           .limit(1)

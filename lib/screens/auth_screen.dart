@@ -181,12 +181,36 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                   const SizedBox(
                     height: 32,
                   ),
-                  ElevatedButton(
-                    onPressed: () async {
+                  InkWell(
+                    onTap: () async {
                       await onGoogleLoginPressMy(context);
                     },
-                    // onPressed: () {},
-                    child: const Text('Google Login'),
+                    child: Card(
+                      margin: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(7),
+                      ),
+                      elevation: 2,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            'assets/img/google.png',
+                            width: 50,
+                          ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          const Text(
+                            'Sign In With Google',
+                            style: TextStyle(color: Colors.grey, fontSize: 17),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
                   ),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
@@ -275,7 +299,22 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
       await prefs.setString('passwd', password);
       await prefs.setString('UID', uid);
       ref.read(uidProvider.notifier).state = uid;
-      context.go('/home_fb');
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+              title: const Text('정보!'),
+              content: const Text('이전 로그인 정보로 실행될 수 있습니다.\n앱을 종료 후 재 실행하세요.'),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      context.go('/home_fb');
+                    },
+                    child: const Text('Close'))
+              ]);
+        },
+      );
 
       // Navigator.of(context).push(
       //   MaterialPageRoute(
