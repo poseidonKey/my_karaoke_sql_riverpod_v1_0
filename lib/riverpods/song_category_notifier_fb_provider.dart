@@ -14,12 +14,14 @@ class SongCategoryListFirebaseNotifier
   SongCategoryListFirebaseNotifier() : super([]) {
     final tmp = getDBFirebaseData();
     tmp.then((value) => state = value);
+    print(' provider ${state.length}');
   }
 
   Future<List<SongItemCategory>> getDBFirebaseData() async {
     // Fetch data from Firestore collection
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final uid = prefs.getString('UID');
+    print(uid);
     QuerySnapshot<Map<String, dynamic>> querySnapshot = await MyFirebaseService
         .instance
         .doc(uid)

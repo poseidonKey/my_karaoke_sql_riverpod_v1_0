@@ -8,9 +8,11 @@ import 'package:my_karaoke_sql_riverpod_v1_0/models/song_item_category.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/models/song_item_model.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/filtered_song_list_provider.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/song_category_notifier_provider.dart';
+import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/song_item_notifier_provider.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/songs_count_provider.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/screens/random_home_screen.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/screens/song_janre_category_screen.dart';
+import 'package:my_karaoke_sql_riverpod_v1_0/util/firebase_service.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -326,18 +328,19 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               );
             },
           ),
-          // ElevatedButton(
-          //     onPressed: () async {
-          //       final datas = ref.read(songItemListNotifierProvider);
-          //       for (SongItemModel item in datas) {
-          //         final song = item.toMap();
-          //         await FirebaseFirestore.instance
-          //             .collection('songs')
-          //             .doc(item.id)
-          //             .set(song);
-          //       }
-          //     },
-          //     child: const Text('fb make Data'))
+          ElevatedButton(
+              onPressed: () async {
+                final datas = ref.read(songItemListNotifierProvider);
+                for (SongItemModel item in datas) {
+                  final song = item.toMap();
+                  await MyFirebaseService.instance
+                      .doc('5ZKcXAeLpQRwyT2up8RhorcgN3A2')
+                      .collection('songs')
+                      .doc(item.id)
+                      .set(song);
+                }
+              },
+              child: const Text('fb make Data :my Data'))
         ],
       ),
     );

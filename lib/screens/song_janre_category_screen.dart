@@ -213,7 +213,7 @@ class SongJanreCategoryScreen extends ConsumerWidget {
                           },
                           style: ElevatedButton.styleFrom(
                               foregroundColor: Colors.red),
-                          child: const Text('Add'),
+                          child: const Text('Add SQL'),
                         ),
                         const SizedBox(
                           width: 16,

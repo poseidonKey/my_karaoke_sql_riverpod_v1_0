@@ -15,7 +15,9 @@ import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/songs_count_fb_provider.d
 import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/uid_fb.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/screens/random_home_screen.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/screens/song_add_screen_fb.dart';
+import 'package:my_karaoke_sql_riverpod_v1_0/screens/song_data_update.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/screens/song_janre_category_fb_screen.dart';
+import 'package:my_karaoke_sql_riverpod_v1_0/util/firebase_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreenFirebase extends ConsumerStatefulWidget {
@@ -29,7 +31,6 @@ class _HomeScreenFirebaseState extends ConsumerState<HomeScreenFirebase> {
   final ScrollController controller = ScrollController();
   final List<String> popupMenu = ['즐겨찾기 화면', '곡 찾기 화면', 'DB 관리'];
   late List<SongItemCategory> categoryList;
-  bool isAlert = true;
   int sub = 0;
 
   String janre = '모든 곡';
@@ -39,7 +40,8 @@ class _HomeScreenFirebaseState extends ConsumerState<HomeScreenFirebase> {
   void initState() {
     super.initState();
     controller.addListener(scrollListener);
-    categoryList = ref.read(songCategoryListNotifierProvider);
+    categoryList = ref.read(songCategoryListNotifierFirebaseProvider);
+    // print('categori list:${categoryList.length}');
     addUID();
   }
 
@@ -56,7 +58,7 @@ class _HomeScreenFirebaseState extends ConsumerState<HomeScreenFirebase> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    songAlert();
+    // songAlert();
   }
 
   void songAlert() async {
@@ -85,11 +87,12 @@ class _HomeScreenFirebaseState extends ConsumerState<HomeScreenFirebase> {
   Widget build(BuildContext context) {
     final state = ref.watch(filteredSongListFirebaseProvider);
     final count = state.length;
-    if (SongCount.songsCountSQL != 0 && isAlert) {
+    if (SongCount.songsCountSQL != 0 && MyFirebaseService.isAlert) {
       sub = (SongCount.songsCountFB - SongCount.songsCountSQL).abs();
     }
 
     categoryList = ref.watch(songCategoryListNotifierFirebaseProvider);
+    print('cate list : ${categoryList.length}');
 
     return Scaffold(
       appBar: AppBar(
@@ -136,23 +139,34 @@ class _HomeScreenFirebaseState extends ConsumerState<HomeScreenFirebase> {
       ),
       drawer: _drawer(context, ref),
       body: SafeArea(
-        child: (SongCount.songsCountSQL != 0 && isAlert)
+        child: (SongCount.songsCountSQL != 0 &&
+                MyFirebaseService.isAlert &&
+                sub != 0)
             ? AlertDialog(
-                title: const Text('UPdate 확인, 개발 진행 중!'),
-                content: Text('서버의 데이터가 로컬 데이타 보다 $sub 만큼 많습니다.'),
+                title: const Text('Update 확인, 개발 진행 중!'),
+                content: Text('서버의 데이터와 로컬 데이타가 $sub 차이가 있습니다.'),
                 actions: [
                   ElevatedButton(
-                      onPressed: () {
-                        isAlert = false;
-                        setState(() {});
-                      },
-                      child: const Text('Cancel')),
+                    onPressed: () {
+                      MyFirebaseService.isAlert = false;
+                      setState(() {});
+                    },
+                    child: const Text('그냥 진행'),
+                  ),
                   ElevatedButton(
-                      onPressed: () {
-                        isAlert = false;
-                        setState(() {});
-                      },
-                      child: const Text('update')),
+                    onPressed: () async {
+                      MyFirebaseService.isAlert = false;
+                      await Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context) {
+                          return SongDataUpdate(
+                            sqlData: SongCount.songsCountSQL,
+                            fbData: SongCount.songsCountFB,
+                          );
+                        }),
+                      );
+                    },
+                    child: const Text('동기화 하기'),
+                  ),
                 ],
               )
             : Column(
@@ -294,8 +308,11 @@ class _HomeScreenFirebaseState extends ConsumerState<HomeScreenFirebase> {
                     context: context, janreName: e.songJanreCategory),
               )
               .toList(),
+          const SizedBox(
+            height: 16,
+          ),
           SizedBox(
-            height: 30,
+            height: 8,
             child: Container(
               color: Colors.deepPurple,
             ),
@@ -351,8 +368,11 @@ class _HomeScreenFirebaseState extends ConsumerState<HomeScreenFirebase> {
               );
             },
           ),
+          const SizedBox(
+            height: 16,
+          ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 8),
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.black,
@@ -375,20 +395,20 @@ class _HomeScreenFirebaseState extends ConsumerState<HomeScreenFirebase> {
               ),
             ),
           ),
-          ElevatedButton(
-              onPressed: () async {
-                // final datas = ref.read(songListFirebaseProvider);
-                // for (SongItemModel? item in datas) {
-                //   final song = item?.toMap();
-                //   if (song != null) {
-                //     await FirebaseFirestore.instance
-                //         .collection('songs')
-                //         .doc(item!.id)
-                //         .set(song);
-                //   }
-                // }
-              },
-              child: const Text('fb make Data'))
+          // ElevatedButton(
+          //     onPressed: () async {
+          // final datas = ref.read(songListFirebaseProvider);
+          // for (SongItemModel? item in datas) {
+          //   final song = item?.toMap();
+          //   if (song != null) {
+          //     await FirebaseFirestore.instance
+          //         .collection('songs')
+          //         .doc(item!.id)
+          //         .set(song);
+          //   }
+          // }
+          // },
+          // child: const Text('fb make Data'))
         ],
       ),
     );

@@ -38,7 +38,9 @@ class SongJanreCategoryFirebaseScreen extends ConsumerWidget {
                         children: [
                           ElevatedButton(
                             onPressed: () async {
+                              print('pressed');
                               final uid = ref.read(uidProvider);
+                              print('uid $uid');
                               int idNum;
                               print(controller.text);
                               String? maxID = await getMaxID(uid);
@@ -53,11 +55,13 @@ class SongJanreCategoryFirebaseScreen extends ConsumerWidget {
                                 final sic = SongItemCategory(
                                     idNum.toString(), controller.text);
                                 final uid = ref.read(uidProvider);
+                                print('uid : $uid');
                                 await MyFirebaseService.instance
                                     .doc(uid)
                                     .collection('songCategoris')
                                     .doc(idNum.toString())
                                     .set(sic.toMap());
+
                                 await ref
                                     .read(
                                         songCategoryListNotifierFirebaseProvider
@@ -118,6 +122,11 @@ class SongJanreCategoryFirebaseScreen extends ConsumerWidget {
                                     .collection('songCategoris')
                                     .doc(state[index].id)
                                     .delete();
+                                // await ref
+                                //     .read(
+                                //         songCategoryListNotifierFirebaseProvider
+                                //             .notifier)
+                                //     .getDBFirebaseData();
                                 await ref
                                     .read(
                                         songCategoryListNotifierFirebaseProvider
@@ -184,20 +193,24 @@ class SongJanreCategoryFirebaseScreen extends ConsumerWidget {
                               try {
                                 final result = maxID;
                                 final idNum = int.parse(result) + 1;
-                                // print(idNum);
+                                print('idnum');
+                                print(idNum);
 
                                 final sic = SongItemCategory(
                                     idNum.toString(), controller.text);
                                 final uid = ref.read(uidProvider);
+                                print('saver uid :$uid');
                                 await MyFirebaseService.instance
                                     .doc(uid)
                                     .collection('songCategoris')
                                     .doc(idNum.toString())
                                     .set(sic.toMap());
+                                print('resp :');
                                 await ref
                                     .read(
                                         songCategoryListNotifierFirebaseProvider
                                             .notifier)
+                                    // .getDBFirebaseData();
                                     .getDBDataFirebaseRefresh();
                                 ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
@@ -237,12 +250,8 @@ class SongJanreCategoryFirebaseScreen extends ConsumerWidget {
 
   Future<String?> getMaxID(String uid) async {
     try {
-      // Get a reference to the Firestore database
-      FirebaseFirestore firestore = FirebaseFirestore.instance;
-
       // Query the collection and order documents by ID in descending order
-      QuerySnapshot querySnapshot = await firestore
-          .collection('allSongs')
+      QuerySnapshot querySnapshot = await MyFirebaseService.instance
           .doc(uid)
           .collection('songCategoris')
           .orderBy('id', descending: true)
@@ -259,6 +268,7 @@ class SongJanreCategoryFirebaseScreen extends ConsumerWidget {
       }
     } catch (error) {
       print('Error getting max ID: $error');
+      print('my error ${error.toString()}');
       return null;
     }
   }

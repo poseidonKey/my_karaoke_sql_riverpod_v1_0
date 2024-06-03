@@ -7,7 +7,6 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/components/login_text_field.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/const/const.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/uid_fb.dart';
-import 'package:my_karaoke_sql_riverpod_v1_0/screens/sql_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthScreen extends ConsumerStatefulWidget {
@@ -226,53 +225,53 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.black,
-                    ),
-                    onPressed: () async {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => const SqlTest(),
-                        ),
-                      );
-                    },
-                    child: const Text(
-                      'SQL Test',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.black,
-                    ),
-                    onPressed: () async {
-                      // email=formKey.
-                      // final SharedPreferences prefs =
-                      //     await SharedPreferences.getInstance();
-                      // if (saveAndValidateForm()) {
-                      //   // Obtain shared preferences.
-                      //   // final userPasswd = prefs.get('userPasswd');
+                  // const SizedBox(
+                  //   height: 20,
+                  // ),
+                  // ElevatedButton(
+                  //   style: ElevatedButton.styleFrom(
+                  //     backgroundColor: Colors.black,
+                  //   ),
+                  //   onPressed: () async {
+                  //     Navigator.of(context).push(
+                  //       MaterialPageRoute(
+                  //         builder: (context) => const SqlTest(),
+                  //       ),
+                  //     );
+                  //   },
+                  //   child: const Text(
+                  //     'SQL Test',
+                  //     style: TextStyle(color: Colors.white),
+                  //   ),
+                  // ),
+                  // ElevatedButton(
+                  //   style: ElevatedButton.styleFrom(
+                  //     backgroundColor: Colors.black,
+                  //   ),
+                  //   onPressed: () async {
+                  //     // email=formKey.
+                  //     // final SharedPreferences prefs =
+                  //     //     await SharedPreferences.getInstance();
+                  //     // if (saveAndValidateForm()) {
+                  //     //   // Obtain shared preferences.
+                  //     //   // final userPasswd = prefs.get('userPasswd');
 
-                      //   await prefs.setString('userId', email);
-                      //   final uid = await signIn();
-                      //   if (uid != null) {
-                      //     await prefs.setString('UID', uid);
-                      //     ref.read(uidProvider.notifier).state = uid;
-                      //   }
-                      //   context.go('/home_fb');
-                      // } else {
-                      //   print('error occure');
-                      // }
-                    },
-                    child: const Text(
-                      'firebase 이용',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
+                  //     //   await prefs.setString('userId', email);
+                  //     //   final uid = await signIn();
+                  //     //   if (uid != null) {
+                  //     //     await prefs.setString('UID', uid);
+                  //     //     ref.read(uidProvider.notifier).state = uid;
+                  //     //   }
+                  //     //   context.go('/home_fb');
+                  //     // } else {
+                  //     //   print('error occure');
+                  //     // }
+                  //   },
+                  //   child: const Text(
+                  //     'firebase 이용',
+                  //     style: TextStyle(color: Colors.white),
+                  //   ),
+                  // ),
                   // FilledButton(
                   //   onPressed: _moveData,
                   //   child: const Text('FB 데이터 옮기기'),
