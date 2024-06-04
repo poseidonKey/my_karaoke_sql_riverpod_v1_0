@@ -3,23 +3,23 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>121449346263-qsdknj8qbut2afadk6j25h490o44vjir.apps.googleusercontent.com</string>
+	<string>262708262149-2bfvf4tctpo15pt6nfjebq29nm92lbqv.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.121449346263-qsdknj8qbut2afadk6j25h490o44vjir</string>
+	<string>com.googleusercontent.apps.262708262149-2bfvf4tctpo15pt6nfjebq29nm92lbqv</string>
 	<key>ANDROID_CLIENT_ID</key>
-	<string>121449346263-hjg6195vo87okquokodm6a4g67vhktod.apps.googleusercontent.com</string>
+	<string>262708262149-3tfa0mbv04eglgqp5114sp9nibdopt26.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
-	<string>AIzaSyCQKFOw-YSM0yA9_EPioBV1XRAAkIMG7_E</string>
+	<string>AIzaSyBE7cAFxOl_fgTfibqKMuOIWGErYD9UWa4</string>
 	<key>GCM_SENDER_ID</key>
-	<string>121449346263</string>
+	<string>262708262149</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.example.myKaraokeSqlRiverpodV10</string>
 	<key>PROJECT_ID</key>
-	<string>my-karaoke-riverpod</string>
+	<string>karaoke-fb-2024</string>
 	<key>STORAGE_BUCKET</key>
-	<string>my-karaoke-riverpod.appspot.com</string>
+	<string>karaoke-fb-2024.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -31,6 +31,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:121449346263:ios:65807da36875a0b2a46c92</string>
+	<string>1:262708262149:ios:1f285fec82024f40da736c</string>
 </dict>
 </plist>

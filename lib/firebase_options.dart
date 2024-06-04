@@ -50,21 +50,21 @@ class DefaultFirebaseOptions {
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyB0MsiG8DuNE1RbFpCrB8amCzniLnDwX-Y',
-    appId: '1:121449346263:android:137737de84ea7dc7a46c92',
-    messagingSenderId: '121449346263',
-    projectId: 'my-karaoke-riverpod',
-    storageBucket: 'my-karaoke-riverpod.appspot.com',
+    apiKey: 'AIzaSyAUrXtnxP__baJOg8ehaQbbSKodPmlzAk8',
+    appId: '1:262708262149:android:a6365ccab7bfc300da736c',
+    messagingSenderId: '262708262149',
+    projectId: 'karaoke-fb-2024',
+    storageBucket: 'karaoke-fb-2024.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyCQKFOw-YSM0yA9_EPioBV1XRAAkIMG7_E',
-    appId: '1:121449346263:ios:65807da36875a0b2a46c92',
-    messagingSenderId: '121449346263',
-    projectId: 'my-karaoke-riverpod',
-    storageBucket: 'my-karaoke-riverpod.appspot.com',
-    androidClientId: '121449346263-hjg6195vo87okquokodm6a4g67vhktod.apps.googleusercontent.com',
-    iosClientId: '121449346263-qsdknj8qbut2afadk6j25h490o44vjir.apps.googleusercontent.com',
+    apiKey: 'AIzaSyBE7cAFxOl_fgTfibqKMuOIWGErYD9UWa4',
+    appId: '1:262708262149:ios:1f285fec82024f40da736c',
+    messagingSenderId: '262708262149',
+    projectId: 'karaoke-fb-2024',
+    storageBucket: 'karaoke-fb-2024.appspot.com',
+    androidClientId: '262708262149-3tfa0mbv04eglgqp5114sp9nibdopt26.apps.googleusercontent.com',
+    iosClientId: '262708262149-2bfvf4tctpo15pt6nfjebq29nm92lbqv.apps.googleusercontent.com',
     iosBundleId: 'com.example.myKaraokeSqlRiverpodV10',
   );
 

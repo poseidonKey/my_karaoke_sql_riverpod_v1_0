@@ -10,7 +10,6 @@ import 'package:my_karaoke_sql_riverpod_v1_0/databases/db_helper.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/models/song_item_category.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/filtered_song_list_fb_provider.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/song_category_notifier_fb_provider.dart';
-import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/song_category_notifier_provider.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/songs_count_fb_provider.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/riverpods/uid_fb.dart';
 import 'package:my_karaoke_sql_riverpod_v1_0/screens/random_home_screen.dart';
